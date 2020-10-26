@@ -13,7 +13,8 @@
   "dependencies": {
     "bootstrap-vue": "^2.18.1",
     "vue": "^2.5.2",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vue2-datepicker": "^3.7.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
