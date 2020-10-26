@@ -18,27 +18,45 @@
         <!-- Start of input form -->
         <b-form inline>
           <!-- City Selection -->
-          <label class="mr-sm-2" for="city-selection">Choose a City:</label>
+          <label class="mr-sm-2" for="id-city-selector">Choose a City:</label>
           <b-form-select
-            id="city-selection"
+            id="id-city-selector"
             class="mb-2 mr-sm-2 mb-sm-0"
             :options="[{ text: 'Choose...', value: null }, 'Chicago', 'New York', 'Seattle']"
             :value="null"
           ></b-form-select>
 
+          <!-- Date Range Selector -->
+          <label class="mr-sm-2" for="id-date-range-picker"> Select a date range:</label>
+          <date-picker v-model="dateRange" range id="id-date-range-picker"></date-picker>
+         
           <!-- Submit Button -->
           <b-button variant="primary" style="margin-left: 10px">Let's Go</b-button>
         </b-form>
+
+        <!-- Styling - ignore -->
+        <p style="margin-left: 45px">or</p>
+        
+        <!-- dateRange is the output of the date range selector - I can't figure out how to get rid of the time
+        part on the end so just chop it off 
+        Output:  [ "2020-10-13T04:00:00.000Z", "2020-10-15T04:00:00.000Z" ] 
+        So use:  [ "2020-10-13", "2020-10-15" ]-->
+        <p>Selected Range: {{ dateRange }}</p>
+
       </b-card>
     </b-card-group>
   </div>
 </template>
 
 <script>
+import DatePicker from 'vue2-datepicker'  
+import 'vue2-datepicker/index.css'
 export default {
+  components: { DatePicker },
   data () {
     return {
-      randomNumber: 0
+      randomNumber: 0,
+      dateRange: null
     }
   },
   methods: {
