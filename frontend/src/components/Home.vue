@@ -43,23 +43,19 @@
         <!-- Styling - ignore -->
         <p class="or-label">or</p>
 
-        <b-form>
-          <!-- Link to website where finding coordinates is really easy -->
-          <p>Use <a href="https://www.openstreetmap.org/export#map=13/42.2914/-85.5780">this link</a> for an interactive coordinate finder map</p>
-          <!-- Input coordinates box -->
-          <div class="input-coordinates-box">
-            <!-- TODO: Fix styling for these and link default values for cities-->
-            <label for="max-latitude">Max Latitude</label>
-            <input type="text" name="max-latitude" id="id-max-latitude" size="10">
-            <br> <br>
-            <label for="min-longitude" style="text-align:left">Min Longitude</label>
-            <input type="text" name="min-longitude" id="id-min-longitude" size="10">
-            <label for="max-longitude" style="text-align: right">Max Longitude</label>
-            <input type="text" name="max-longitude" id="id-max-longitude" size="10">
-            <br> <br>
-            <label for="min-latitude">Min Latitude</label>
-            <input type="text" name="min-latitude" id="id-min-latitude" size="10">
-          </div>
+        <!-- Link to website where finding a coordinate circle is really easy -->
+        <p>Use <a href="https://www.mapdevelopers.com/draw-circle-tool.php">this link</a> for an interactive coordinate circle finder map. 
+          Input the city / address, then click <b>"New Circle"</b>. Copy over the Position and Radius in miles.</p>
+
+        <!-- Coordinate Circle Inputs -->
+        <b-form class="coordinate-circle-wrapper">
+          <!-- TODO: Fix styling so labels are inline  -->
+          <label for="id-latitude">Latitude: </label>
+          <b-form-input v-model="text" id="id-latitude" placeholder="Latitude"></b-form-input>
+          <label for="id-longitude">Longitude: </label>
+          <b-form-input v-model="text" id="id-longitude" placeholder="Longitude"></b-form-input>
+          <label for="id-radius">Radius (in miles): </label>
+          <b-form-input v-model="text" id="id-radius" placeholder="Radius (in miles)"></b-form-input>
         </b-form>
 
       </b-card>
@@ -95,21 +91,11 @@ export default {
 </script>
 
 <style>
-label {
-  display: block;
-  margin: 0px
+#id-latitude, #id-longitude, #id-radius{
+  margin-bottom: 10px;
 }
-.input-coordinates-box{
-  background-color: rgb(132, 219, 248);
-  width: 400px;
-  text-align: center;
-  display: table;
-}
-#id-max-longitude{
-  float: right;
-}
-#id-min-longitude{
-  float: left;
+.coordinate-circle-wrapper{
+  width: 300px
 }
 .or-label{
   margin: 10px 45px;
