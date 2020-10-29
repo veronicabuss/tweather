@@ -44,7 +44,7 @@
         <p class="or-label">or</p>
 
         <!-- Link to website where finding a coordinate circle is really easy -->
-        <p>Use <a href="https://www.mapdevelopers.com/draw-circle-tool.php">this link</a> for an interactive coordinate circle finder map. 
+        <p>Use <a href="https://www.mapdevelopers.com/draw-circle-tool.php">this link</a> for an interactive coordinate circle finder map.
           Input the city / address, then click <b>"New Circle"</b>. Copy over the Position and Radius in miles.</p>
 
         <!-- Coordinate Circle Inputs -->
@@ -66,22 +66,28 @@
 <script>
 import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
+import axios from 'axios'
 export default {
   components: { DatePicker },
   data () {
     return {
-      randomNumber: 0,
-      dateRange: null
+      dateRange: null,
+      randomNumber: 0
     }
   },
   methods: {
-    getRandomInt (min, max) {
-      min = Math.ceil(min)
-      max = Math.floor(max)
-      return Math.floor(Math.random() * (max - min + 1)) + min
-    },
     getRandom () {
-      this.randomNumber = this.getRandomInt(1, 100)
+      this.randomNumber = this.getRandomFromBackend()
+    },
+    getRandomFromBackend () {
+      const path = `http://localhost:5000/api/random`
+      axios.get(path)
+        .then(response => {
+          this.randomNumber = response.data.randomNumber
+        })
+        .catch(error => {
+          console.log(error)
+        })
     }
   },
   created () {

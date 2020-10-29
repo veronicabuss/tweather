@@ -39,7 +39,7 @@ deactivate nondestructive
 
 VIRTUAL_ENV="/home/spit2/Documents/bigdata/tweather/backend/venv"
 export VIRTUAL_ENV
-export FLASK_APP=../run.py 
+export FLASK_APP=backend/run.py 
 export FLASK_DEBUG=1
 
 _OLD_VIRTUAL_PATH="$PATH"
