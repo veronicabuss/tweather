@@ -13,7 +13,11 @@ Virtual Environment:
 - `source backend/venv/bin/activate`
 - `deactivate`
 
+Virtual Environment on Windows:
+- `cd backend/venv/bin`
+- `& .\activate`
+- `deactivate`
+
 To run the front end:
+`cd frontend`
 `npm run dev`
-
-
