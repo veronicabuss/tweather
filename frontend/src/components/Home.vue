@@ -31,7 +31,7 @@
           <date-picker v-model="dateRange" range id="id-date-range-picker"></date-picker>
 
           <!-- Submit Button -->
-          <b-button variant="primary" style="margin-left: 10px">Let's Go</b-button>
+          <b-button @click="useDate" variant="primary" style="margin-left: 10px">Let's Go</b-button>
         </b-form>
 
         <!-- dateRange is the output of the date range selector - I can't figure out how to get rid of the time
@@ -71,11 +71,22 @@ export default {
   components: { DatePicker },
   data () {
     return {
+      cityName: null,
       dateRange: null,
-      randomNumber: 0
+      randomNumber: 0,
+      tempData: null
     }
   },
   methods: {
+    useDate () {
+      const path = 'http://localhost:5000/api/request'
+      const json = JSON.stringify({date: this.dateRange, city: this.cityName})
+      axios.post(path, json, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+    },
     getRandom () {
       this.randomNumber = this.getRandomFromBackend()
     },
