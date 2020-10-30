@@ -11,6 +11,7 @@ Twitter Weather Project for CS6100 -  A Big Data Application to Explore How Twit
 
 Virtual Environment:
 - `source backend/venv/bin/activate`
+- `pip install -r requirements.txt`
 - `deactivate`
 
 Virtual Environment on Windows:
