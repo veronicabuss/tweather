@@ -10,14 +10,19 @@ Twitter Weather Project for CS6100 -  A Big Data Application to Explore How Twit
 4. `npm install`
 
 Virtual Environment:
-- `source backend/venv/bin/activate`
+- `python3 -m venv venv`
+- `source venv/bin/activate`
 - `pip install -r requirements.txt`
 - `deactivate`
 
 Virtual Environment on Windows:
-- `cd backend/venv/bin`
+- `python3 -m venv venv`
+- `cd venv/bin`
 - `& .\activate`
 - `deactivate`
+
+To run the back end:
+`./startBack.sh`
 
 To run the front end:
 `cd frontend`
