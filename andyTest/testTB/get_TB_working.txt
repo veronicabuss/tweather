@@ -1,0 +1,18 @@
+Installing TextBlob for python3.8 (macOS 10.15.7):
+
+From ~ (home dir)
+CMD:  python3.8 -m pip install TextBlob
+RUN:   /Applications/Python\ 3.8/Install\ Certificates.command 
+CMD:  python3.8 -m textblob.download_corpora
+
+Relevant helpful sites:
+
+- https://docs.python.org/3/installing/index.html
+
+- https://textblob.readthedocs.io/en/dev/install.html
+
+- https://stackoverflow.com/questions/41691327/ssl-sslerror-ssl-certificate-verify-failed-certificate-verify-failed-ssl-c/41692664#41692664
+
+- https://github.com/gunthercox/ChatterBot/issues/930#issuecomment-322111087
+
+- 
