@@ -5,7 +5,7 @@
     <p>Random number from backend: {{ randomNumber }}</p>
     <button @click="getRandom" style="margin-bottom: 20px">New random number</button>
 
-    <!-- Card that holds the inputs -->
+    <!-- Main Card -->
     <b-card-group deck>
       <b-card
         border-variant="primary"
@@ -15,15 +15,16 @@
         align="left"
       >
         <b-card-text>Use the parameters below to see how people in that area are feeling about the weather.</b-card-text>
-        <!-- Start of input form -->
+        <!-- Start of init inputs -->
         <b-form inline>
           <!-- City Selection -->
           <label class="mr-sm-2" for="id-city-selector">Choose a City:</label>
           <b-form-select
             id="id-city-selector"
             class="mb-2 mr-sm-2 mb-sm-0"
-            :options="[{ text: 'Choose...', value: null }, 'Chicago', 'New York', 'Seattle']"
-            :value="null"
+            :options="cityOptions"
+            v-model="cityData"
+            @change="processCity"
           ></b-form-select>
 
           <!-- Date Range Selector -->
@@ -32,31 +33,52 @@
 
           <!-- Submit Button -->
           <b-button @click="useDate" variant="primary" style="margin-left: 10px">Let's Go</b-button>
+          <!-- <b-button @click="useDate" variant="primary" style="margin-left: 10px">Let's Go</b-button> -->
         </b-form>
 
-        <!-- dateRange is the output of the date range selector - I can't figure out how to get rid of the time
-        part on the end so just chop it off
-        Output:  [ "2020-10-13T04:00:00.000Z", "2020-10-15T04:00:00.000Z" ]
-        So use:  [ "2020-10-13", "2020-10-15" ]-->
-        <p>Selected Range: {{ dateRange }}</p>
-
-        <!-- Styling - ignore -->
+        <!-- Styling -->
         <p class="or-label">or</p>
 
         <!-- Link to website where finding a coordinate circle is really easy -->
-        <p>Use <a href="https://www.mapdevelopers.com/draw-circle-tool.php">this link</a> for an interactive coordinate circle finder map.
+        <p>Use <a v-bind:href="circleSelectorLink">this link</a> to adjust the preselected city parameters or select a different location.
           Input the city / address, then click <b>"New Circle"</b>. Copy over the Position and Radius in miles.</p>
 
         <!-- Coordinate Circle Inputs -->
-        <b-form class="coordinate-circle-wrapper">
-          <!-- TODO: Fix styling so labels are inline  -->
+        <b-form class="coordinate-circle-wrapper" inline>
           <label for="id-latitude">Latitude: </label>
-          <b-form-input v-model="text" id="id-latitude" placeholder="Latitude"></b-form-input>
+          <b-form-input v-model="latitude" id="id-latitude" placeholder="Latitude"></b-form-input>
           <label for="id-longitude">Longitude: </label>
-          <b-form-input v-model="text" id="id-longitude" placeholder="Longitude"></b-form-input>
+          <b-form-input v-model="longitude" id="id-longitude" placeholder="Longitude"></b-form-input>
           <label for="id-radius">Radius (in miles): </label>
-          <b-form-input v-model="text" id="id-radius" placeholder="Radius (in miles)"></b-form-input>
+          <b-form-input v-model="radius" id="id-radius" placeholder="Radius (in miles)"></b-form-input>
         </b-form>
+
+        <!-- Weather Data goes in this card -->
+        <b-card
+          title="Official Weather Data Goes Here"
+          tag="article"
+          class="weather-card"
+        >
+          <!-- Average Temp and city name for the header -->
+          <h1>&nbsp;&nbsp;75° in {{cityName}}</h1>
+
+          <!-- Weather Filtering Inputs -->
+          <b-form class="weather-filtering-wrapper" inline>
+            <label for="id-temps-above">Temps Above: </label>
+            <b-form-input v-model="tempsAbove" id="id-temps-above" placeholder="Temps Above"></b-form-input>
+            <label for="id-temps-below">Temps Below: </label>
+            <b-form-input v-model="tempsBelow" id="id-temps-below" placeholder="Temps Below"></b-form-input>
+            <label for="id-precip-above">Precip Above: </label>
+            <b-form-input v-model="precipAbove" id="id-precip-above" placeholder="Precip Above"></b-form-input>
+            <p class="space">&nbsp;&nbsp;&nbsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</p>
+            <label for="id-precip-below">Precip Below: </label>
+            <b-form-input v-model="precipBelow" id="id-precip-below" placeholder="Precip Below"></b-form-input>
+            <label for="id-avg-wind-direction">Avg Wind Direction: </label>
+            <b-form-input v-model="avgWindDirection" id="id-avg-wind-direction" placeholder="Avg Wind Direction"></b-form-input>
+            <label for="id-avg-wind-speed">Avg Wind Speed (mph): </label>
+            <b-form-input v-model="avgWindSpeed" id="id-avg-wind-speed" placeholder="Avg Wind Speed (mph)"></b-form-input>
+          </b-form>
+        </b-card>
 
       </b-card>
     </b-card-group>
@@ -74,7 +96,20 @@ export default {
       cityName: null,
       dateRange: null,
       randomNumber: 0,
-      tempData: null
+      tempData: null,
+      cityData: null,
+      latitude: null,
+      longitude: null,
+      radius: null,
+      circleSelectorLink: 'https://www.mapdevelopers.com/draw-circle-tool.php',
+      // Value format: City name, Lat, Long, Radius (miles), link to circle (see processCity())
+      cityOptions: [
+        { text: 'Choose...', value: null },
+        { text: 'Chicago', value: 'Chicago,41.876584,-87.639529,10.0,https://rb.gy/qwsmxo' },
+        { text: 'Miami', value: 'Miami,25.783447,-80.214909,5.0,https://rb.gy/j3u5bo' },
+        { text: 'Seattle', value: 'Seattle,47.606609,-122.332815,8.0,https://rb.gy/ypkbxo' }
+      ]
+
     }
   },
   methods: {
@@ -86,6 +121,17 @@ export default {
           'Content-Type': 'application/json'
         }
       })
+    },
+    // On select of a city, updates the manual select buttons with prepopulated data
+    processCity () {
+      var parsedCityData = this.cityData.split(',')
+      if (parsedCityData.length === 5) {
+        this.cityName = parsedCityData[0]
+        this.latitude = parsedCityData[1]
+        this.longitude = parsedCityData[2]
+        this.radius = parsedCityData[3]
+        this.circleSelectorLink = parsedCityData[4]
+      }
     },
     getRandom () {
       this.randomNumber = this.getRandomFromBackend()
@@ -108,13 +154,23 @@ export default {
 </script>
 
 <style>
+label{
+  margin-right: 5px;
+  margin-left: 10px;
+}
 #id-latitude, #id-longitude, #id-radius{
-  margin-bottom: 10px;
+  margin-right: 10px;
 }
 .coordinate-circle-wrapper{
-  width: 300px
+  margin-bottom: 10px;
 }
 .or-label{
   margin: 10px 45px;
+}
+.space{
+  margin-bottom: 25px;
+}
+.weather-card{
+  margin-top: 20px;
 }
 </style>
