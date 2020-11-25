@@ -4,6 +4,8 @@ from flask_cors import CORS
 import json
 #File for importing token not tracked by git
 import Token
+#Import twitter request code.
+import twitter_request
 
 #needed to make web requests
 import requests
@@ -52,10 +54,10 @@ def do_request():
     # if content.keys().contains
     if 'date' and 'city' not in content.keys():
         return "bad json"
-    
+
     for key in content.keys():
         print('my key: {}'.format(key))
-        if(key == 'date'):            
+        if(key == 'date'):
             print('we have a date {}'.format(content['date']))
             startDate = content['date'][0]
             endDate = content['date'][1]
@@ -71,8 +73,8 @@ def do_request():
     station_id = 'GHCND:USW00023129'
     #add the access token you got from NOAA
     myToken = Token.token()
-        
-        
+
+
     api_call(startDate,endDate,station_id,myToken)
 
 
@@ -110,4 +112,16 @@ def api_call(startDate,endDate,station_id,Token):
 
 
 
+@app.route('/api/twitter_request', methods=['POST'])
+def do_twitter_request():
+    content = request.json
 
+    #still need to get attibutes out of json from front end
+    longitude = '-87.785555'
+    latitude = '41.812925'
+    radius = '50'
+    query = 'sunny -filter:retweets'
+    date = '2020-11-16'
+    json_return_value = get_tweets(longitude,latitude,radius,query, date)
+
+    return

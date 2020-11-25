@@ -1,3 +1,9 @@
 
 def token():
-    return 'PUT TOKEN HERE'
+    return ''
+
+def consumer_key():
+    return ''
+
+def consumer_secret():
+    return ''
