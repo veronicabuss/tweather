@@ -94,7 +94,64 @@
 
           </b-card>
         </b-collapse>
+
+      <!-- Select Keywords card -->
+      <b-card>
+        <!-- Date Header Row -->
+        <b-row class="header-row">
+          <b-col class="header" id="date-header-1">
+            <h3>11/22</h3>
+          </b-col>
+          <b-col class="header" id="date-header-2">
+            <h3>11/23</h3>
+          </b-col>
+          <b-col class="header" id="date-header-3">
+            <h3>11/24</h3>
+          </b-col>
+          <b-col class="header" id="date-header-4">
+            <h3>11/25</h3>
+          </b-col>
+          <b-col class="header" id="date-header-5">
+            <h3>11/26</h3>
+          </b-col>
+          <b-col class="header" id="date-header-6">
+            <h3>11/27</h3>
+          </b-col>
+          <b-col class="header" id="date-header-7">
+            <h3>11/28</h3>
+          </b-col>
+        </b-row>
+         <!-- Keywords Row -->
+        <b-row class="keywords-row">
+          <b-col class="keywords-col" id="keywords-day-1">
+            <p>Enter Keywords:</p>
+            <b-button variant="outline-info" v-b-toggle.day1-cold-collapse class="button-dropdown">Cold <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day1-cold-collapse">
+              <b-form-checkbox-group id="day1-cold-checkboxes" :options="coldOptions"></b-form-checkbox-group>
+            </b-collapse>
+          </b-col>
+          <b-col class="keywords-col" id="keywords-day-2">
+            <p>Enter Keywords:</p>
+          </b-col>
+          <b-col class="keywords-col" id="keywords-day-3">
+            <p>Enter Keywords:</p>
+          </b-col>
+          <b-col class="keywords-col" id="keywords-day-4">
+            <p>Enter Keywords:</p>
+          </b-col>
+          <b-col class="keywords-col" id="keywords-day-5">
+            <p>Enter Keywords:</p>
+          </b-col>
+          <b-col class="keywords-col" id="keywords-day-6">
+            <p>Enter Keywords:</p>
+          </b-col>
+          <b-col class="keywords-col" id="keywords-day-7">
+            <p>Enter Keywords:</p>
+          </b-col>
+        </b-row>
+
       </b-card>
+            </b-card>
     </b-card-group>
   </div>
 </template>
@@ -134,6 +191,18 @@ export default {
         { text: 'Chicago', value: 'Chicago,41.876584,-87.639529,10.0,https://rb.gy/qwsmxo' },
         { text: 'Miami', value: 'Miami,25.783447,-80.214909,5.0,https://rb.gy/j3u5bo' },
         { text: 'Seattle', value: 'Seattle,47.606609,-122.332815,8.0,https://rb.gy/ypkbxo' }
+      ],
+      coldOptions: [
+        'Cold', 'Icy', 'Snowy', 'Frigid', 'Frost', 'Slippery', 'Blizzard'
+      ],
+      warmOptions: [
+        'Warm', 'Nice out', 'Sunny', 'Sunshine', 'Hot day', 'Burning', 'Blistering heat'
+      ],
+      stormOptions: [
+        'Windy', 'Strong wind', 'Brisk', 'Hurricane', 'Storm', 'Tropical Storm',
+      ],
+      precipOptions: [
+        'Rain', 'Sleet', 'Hail', 'Snow', 'Rainy', 'Dreary', 'Gloomy'
       ],
       imageProps: { blank: true, height: 75, width: 400, class: 'm1' }
     }
@@ -178,6 +247,21 @@ export default {
 </script>
 
 <style>
+.button-dropdown{
+  padding: 3px 10px;
+  margin-bottom: 3px;
+}
+.header{
+  border: 3px solid skyblue;
+  text-align: center;
+  vertical-align: middle;
+  margin: 1px 1px 0px 1px;
+  padding-top: 5px;
+}
+.keywords-col{
+  border: 3px solid skyblue;
+  margin: 0px 1px 1px 1px;
+}
 label{
   margin-right: 5px;
   margin-left: 10px;
