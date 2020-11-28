@@ -2,9 +2,6 @@
 
 <template>
   <div>
-    <p>Random number from backend: {{ randomNumber }}</p>
-    <button @click="getRandom" style="margin-bottom: 20px">New random number</button>
-
     <!-- Main Card -->
     <b-card-group deck>
       <b-card
@@ -14,7 +11,7 @@
         header-text-variant="white"
         align="left"
       >
-        <b-card-text>Use the parameters below to see how people in that area are feeling about the weather.</b-card-text>
+        <b-card-text>Use the parameters below to see how people in that area were feeling about the weather this week. (Get date and display here)</b-card-text>
         <!-- Start of init inputs -->
         <b-form inline>
           <!-- City Selection -->
@@ -27,12 +24,8 @@
             @change="processCity"
           ></b-form-select>
 
-          <!-- Date Range Selector -->
-          <label class="mr-sm-2" for="id-date-range-picker"> Select a date range:</label>
-          <date-picker v-model="dateRange" range id="id-date-range-picker"></date-picker>
-
           <!-- Submit Button -->
-          <b-button @click="useDate" variant="primary" style="margin-left: 10px">Let's Go</b-button>
+          <b-button @click="useDate" variant="primary" style="margin-left: 10px" v-b-toggle.weather-collapse>Let's Go</b-button>
           <!-- <b-button @click="useDate" variant="primary" style="margin-left: 10px">Let's Go</b-button> -->
         </b-form>
 
@@ -54,32 +47,53 @@
         </b-form>
 
         <!-- Weather Data goes in this card -->
-        <b-card
-          title="Official Weather Data Goes Here"
-          tag="article"
-          class="weather-card"
-        >
-          <!-- Average Temp and city name for the header -->
-          <h1>&nbsp;&nbsp;75° in {{cityName}}</h1>
+        <b-collapse id="weather-collapse" class="mt-2">
+          <b-card
+            tag="article"
+            class="weather-card"
+          >
+            <b-title style="font-size:14pt;">Weather in {{cityName}} according to {{station_name}}, {{station_dist}} miles away: </b-title>
+            <!-- Headers for the plots -->
+            <b-row>
+              <b-col>
+                <h3 style="text-align:center">{{avg_temp}}°F Average in {{cityName}}</h3>
+              </b-col>
+              <b-col>
+                <h3 style="text-align:center">{{total_precip}} inches Total Precipitation</h3>
+              </b-col>
+              <b-col>
+                <h3 style="text-align:center">{{max_wind}} mph Max Winds</h3>
+              </b-col>
+            </b-row>
 
-          <!-- Weather Filtering Inputs -->
-          <b-form class="weather-filtering-wrapper" inline>
-            <label for="id-temps-above">Temps Above: </label>
-            <b-form-input v-model="tempsAbove" id="id-temps-above" placeholder="Temps Above"></b-form-input>
-            <label for="id-temps-below">Temps Below: </label>
-            <b-form-input v-model="tempsBelow" id="id-temps-below" placeholder="Temps Below"></b-form-input>
-            <label for="id-precip-above">Precip Above: </label>
-            <b-form-input v-model="precipAbove" id="id-precip-above" placeholder="Precip Above"></b-form-input>
-            <p class="space">&nbsp;&nbsp;&nbsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;</p>
-            <label for="id-precip-below">Precip Below: </label>
-            <b-form-input v-model="precipBelow" id="id-precip-below" placeholder="Precip Below"></b-form-input>
-            <label for="id-avg-wind-direction">Avg Wind Direction: </label>
-            <b-form-input v-model="avgWindDirection" id="id-avg-wind-direction" placeholder="Avg Wind Direction"></b-form-input>
-            <label for="id-avg-wind-speed">Avg Wind Speed (mph): </label>
-            <b-form-input v-model="avgWindSpeed" id="id-avg-wind-speed" placeholder="Avg Wind Speed (mph)"></b-form-input>
-          </b-form>
-        </b-card>
+            <!-- Weather Plots - start as blank colors, src will be given.
+            NOTE: The blank prop takes precedence over the src prop. If you set both and later,
+            set blank to false the image specified in src will then be displayed. -->
+            <b-row>
+              <b-col>
+                <b-img v-bind="imageProps" blank-color="#338833" fluid alt="Weather Plot 1"></b-img>
+              </b-col>
+              <b-col>
+                <b-img v-bind="imageProps" blank-color="rgba(128, 255, 255, 0.5)" fluid alt="Weather Plot 2"></b-img>
+              </b-col>
+              <b-col>
+                <b-img v-bind="imageProps" blank-color="#88f" alt="Weather Plot 3" fluid ></b-img>
+              </b-col>
+            </b-row>
+            <b-row>
+              <b-col>
+                <h5 style="text-align:left; margin-left:">{{avg_max_temp}}°F average max, {{avg_min_temp}}°F average min</h5>
+              </b-col>
+              <b-col>
+                <h5 style="text-align:left">{{total_rain}} inches of rain, {{total_snow}} inches of snow</h5>
+              </b-col>
+              <b-col>
+                <h5 style="text-align:left">{{num_thunderous_days}} days of detected thunder</h5>
+              </b-col>
+            </b-row>
 
+          </b-card>
+        </b-collapse>
       </b-card>
     </b-card-group>
   </div>
@@ -93,9 +107,19 @@ export default {
   components: { DatePicker },
   data () {
     return {
+      // Weather Variables from NOAA
+      station_name: 'DTW', // null,
+      station_dist: 2, // null,
+      num_thunderous_days: 0, // null,
+      max_wind: 0, // null,
+      avg_temp: 55, // null,
+      avg_max_temp: 65, // null,
+      avg_min_temp: 45, // null,
+      total_rain: 2, // null,
+      total_snow: 0, // null,
+      // Other Variables
+      total_precip: null,
       cityName: null,
-      dateRange: null,
-      randomNumber: 0,
       tempData: null,
       cityData: null,
       latitude: null,
@@ -105,15 +129,19 @@ export default {
       // Value format: City name, Lat, Long, Radius (miles), link to circle (see processCity())
       cityOptions: [
         { text: 'Choose...', value: null },
+        { text: 'Detroit', value: 'Detroit,42.372169,-83.116741,9.4,https://rb.gy/nuulim' },
         { text: 'Chicago', value: 'Chicago,41.876584,-87.639529,10.0,https://rb.gy/qwsmxo' },
         { text: 'Miami', value: 'Miami,25.783447,-80.214909,5.0,https://rb.gy/j3u5bo' },
         { text: 'Seattle', value: 'Seattle,47.606609,-122.332815,8.0,https://rb.gy/ypkbxo' }
-      ]
-
+      ],
+      imageProps: { blank: true, height: 75, width: 400, class: 'm1' }
     }
   },
   methods: {
     useDate () {
+      // Other inits
+      this.total_precip = this.total_rain + this.total_snow
+      // Grab dates from a week ago to today
       const path = 'http://localhost:5000/api/request'
       const json = JSON.stringify({date: this.dateRange, city: this.cityName})
       axios.post(path, json, {
@@ -132,23 +160,7 @@ export default {
         this.radius = parsedCityData[3]
         this.circleSelectorLink = parsedCityData[4]
       }
-    },
-    getRandom () {
-      this.randomNumber = this.getRandomFromBackend()
-    },
-    getRandomFromBackend () {
-      const path = `http://localhost:5000/api/random`
-      axios.get(path)
-        .then(response => {
-          this.randomNumber = response.data.randomNumber
-        })
-        .catch(error => {
-          console.log(error)
-        })
     }
-  },
-  created () {
-    this.getRandom()
   }
 }
 </script>
