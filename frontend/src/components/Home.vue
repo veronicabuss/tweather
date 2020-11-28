@@ -11,7 +11,7 @@
         header-text-variant="white"
         align="left"
       >
-        <b-card-text>Use the parameters below to see how people in that area were feeling about the weather this week. (Get date and display here)</b-card-text>
+        <b-card-text>Use the parameters below to see how people in that area were feeling about the weather this week. {{dateRange}}</b-card-text>
         <!-- Start of init inputs -->
         <b-form inline>
           <!-- City Selection -->
@@ -29,22 +29,22 @@
           <!-- <b-button @click="useDate" variant="primary" style="margin-left: 10px">Let's Go</b-button> -->
         </b-form>
 
-        <!-- Styling -->
-        <p class="or-label">or</p>
+        <b-button variant="outline-primary" v-b-toggle.coordinates-collapse style="margin: 20px">Enter Coordinates Manually</b-button>
+        <b-collapse id="coordinates-collapse" class="mt-2">
+          <!-- Link to website where finding a coordinate circle is really easy -->
+          <p>Use <a v-bind:href="circleSelectorLink">this link</a> to adjust the preselected city parameters or select a different location.
+            Input the city / address, then click <b>"New Circle"</b>. Copy over the Position and Radius in miles.</p>
 
-        <!-- Link to website where finding a coordinate circle is really easy -->
-        <p>Use <a v-bind:href="circleSelectorLink">this link</a> to adjust the preselected city parameters or select a different location.
-          Input the city / address, then click <b>"New Circle"</b>. Copy over the Position and Radius in miles.</p>
-
-        <!-- Coordinate Circle Inputs -->
-        <b-form class="coordinate-circle-wrapper" inline>
-          <label for="id-latitude">Latitude: </label>
-          <b-form-input v-model="latitude" id="id-latitude" placeholder="Latitude"></b-form-input>
-          <label for="id-longitude">Longitude: </label>
-          <b-form-input v-model="longitude" id="id-longitude" placeholder="Longitude"></b-form-input>
-          <label for="id-radius">Radius (in miles): </label>
-          <b-form-input v-model="radius" id="id-radius" placeholder="Radius (in miles)"></b-form-input>
-        </b-form>
+          <!-- Coordinate Circle Inputs -->
+          <b-form class="coordinate-circle-wrapper" inline>
+            <label for="id-latitude">Latitude: </label>
+            <b-form-input v-model="latitude" id="id-latitude" placeholder="Latitude"></b-form-input>
+            <label for="id-longitude">Longitude: </label>
+            <b-form-input v-model="longitude" id="id-longitude" placeholder="Longitude"></b-form-input>
+            <label for="id-radius">Radius (in miles): </label>
+            <b-form-input v-model="radius" id="id-radius" placeholder="Radius (in miles)"></b-form-input>
+          </b-form>
+        </b-collapse>
 
         <!-- Weather Data goes in this card -->
         <b-collapse id="weather-collapse" class="mt-2">
@@ -52,9 +52,9 @@
             tag="article"
             class="weather-card"
           >
-            <b-title style="font-size:14pt;">Weather in {{cityName}} according to {{station_name}}, {{station_dist}} miles away: </b-title>
+            <b-title style="font-size:15pt">Weather in {{cityName}} according to {{station_name}}, {{station_dist}} miles away: </b-title>
             <!-- Headers for the plots -->
-            <b-row>
+            <b-row style="margin-top: 10px">
               <b-col>
                 <h3 style="text-align:center">{{avg_temp}}°F Average in {{cityName}}</h3>
               </b-col>
@@ -119,6 +119,7 @@ export default {
       total_snow: 0, // null,
       // Other Variables
       total_precip: null,
+      dateRange: null,
       cityName: null,
       tempData: null,
       cityData: null,
@@ -141,7 +142,18 @@ export default {
     useDate () {
       // Other inits
       this.total_precip = this.total_rain + this.total_snow
-      // Grab dates from a week ago to today
+
+      // Get the date range from a week ago until yesterday - format: [[start_date], [end_date]] i.e: ["YYYY-MM-DD", "YYYY-MM-DD"]
+      var todaysDate = new Date()
+      todaysDate.setDate(todaysDate.getDate() - 1)
+      todaysDate = todaysDate.toISOString().split('T')[0]
+      var oneWeekAgo = new Date()
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
+      oneWeekAgo = oneWeekAgo.toISOString().split('T')[0]
+      const datesRange = [oneWeekAgo.toString(), todaysDate.toString()]
+      this.dateRange = datesRange
+
+      // Push the date range to the backend
       const path = 'http://localhost:5000/api/request'
       const json = JSON.stringify({date: this.dateRange, city: this.cityName})
       axios.post(path, json, {
