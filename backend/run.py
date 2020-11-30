@@ -1,6 +1,10 @@
 from flask import Flask, Response, request, render_template, jsonify
 from random import *
 from flask_cors import CORS
+
+import weather_api
+import plots
+
 import json
 #File for importing token not tracked by git
 import Token
@@ -49,9 +53,9 @@ def random_number():
 
 @app.route('/api/request', methods=['POST'])
 def do_request():
-#   print(request.get_data())
+
     content = request.json
-    # if content.keys().contains
+    # get data from json
     if 'date' and 'city' not in content.keys():
         return "bad json"
 
@@ -71,44 +75,50 @@ def do_request():
 
     #Hardcoded station for now.
     station_id = 'GHCND:USW00023129'
+    # station_id = 'GHCND:USW000'+station_id
+    # station_id = str(station_id)  # not sure why, but need to cast str()
     #add the access token you got from NOAA
-    myToken = Token.token()
+    # myToken = Token.token()
+    datajson = weather_api.callNOAA(staid,beg,end)
 
+    datalist = weather_api.getData(datajson)
 
-    api_call(startDate,endDate,station_id,myToken)
+    plots.makePlots(station_id,datalist)
+
+    #api_call(startDate,endDate,station_id,myToken)
 
 
     return request.args;
 
 
-def api_call(startDate,endDate,station_id,Token):
-    dates_temp = []
-    dates_prcp = []
-    temps = []
-    prcp = []
-
-    #make the api call
-    r = requests.get('https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid=GHCND&datatypeid=TAVG&limit=1000&stationid='+station_id+'&startdate='+startDate+'&enddate='+endDate, headers={'token':Token})
-    #load the api response as a json
-    d = json.loads(r.text)
-
-    # get all items in the response which are average temperature readings
-    avg_temps = [item for item in d['results'] if item['datatype']=='TAVG']
-    #get the date field from all average temperature readings
-    dates_temp += [item['date'] for item in avg_temps]
-    #get the actual average temperature from all average temperature readings
-    temps += [item['value'] for item in avg_temps]
-
-    #initialize dataframe
-    df_temp = pd.DataFrame()
-
-    #populate date and average temperature fields (cast string date to datetime and convert temperature from tenths of Celsius to Fahrenheit)
-    df_temp['date'] = [datetime.strptime(d, "%Y-%m-%dT%H:%M:%S") for d in dates_temp]
-    df_temp['avgTemp'] = [float(v)/10.0*1.8 + 32 for v in temps]
-
-    print(df_temp)
-
-    return
+# def api_call(startDate,endDate,station_id,Token):
+#     dates_temp = []
+#     dates_prcp = []
+#     temps = []
+#     prcp = []
+#
+#     #make the api call
+#     r = requests.get('https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid=GHCND&datatypeid=TAVG&limit=1000&stationid='+station_id+'&startdate='+startDate+'&enddate='+endDate, headers={'token':Token})
+#     #load the api response as a json
+#     d = json.loads(r.text)
+#
+#     # get all items in the response which are average temperature readings
+#     avg_temps = [item for item in d['results'] if item['datatype']=='TAVG']
+#     #get the date field from all average temperature readings
+#     dates_temp += [item['date'] for item in avg_temps]
+#     #get the actual average temperature from all average temperature readings
+#     temps += [item['value'] for item in avg_temps]
+#
+#     #initialize dataframe
+#     df_temp = pd.DataFrame()
+#
+#     #populate date and average temperature fields (cast string date to datetime and convert temperature from tenths of Celsius to Fahrenheit)
+#     df_temp['date'] = [datetime.strptime(d, "%Y-%m-%dT%H:%M:%S") for d in dates_temp]
+#     df_temp['avgTemp'] = [float(v)/10.0*1.8 + 32 for v in temps]
+#
+#     print(df_temp)
+#
+#     return
 
 
 
