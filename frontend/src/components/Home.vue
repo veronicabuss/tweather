@@ -145,10 +145,10 @@ export default {
 
       // Get the date range from a week ago until yesterday - format: [[start_date], [end_date]] i.e: ["YYYY-MM-DD", "YYYY-MM-DD"]
       var todaysDate = new Date()
-      todaysDate.setDate(todaysDate.getDate() - 1)
+      // todaysDate.setDate(todaysDate.getDate() - 1)
       todaysDate = todaysDate.toISOString().split('T')[0]
       var oneWeekAgo = new Date()
-      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 6)
       oneWeekAgo = oneWeekAgo.toISOString().split('T')[0]
       const datesRange = [oneWeekAgo.toString(), todaysDate.toString()]
       this.dateRange = datesRange
