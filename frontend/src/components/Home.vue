@@ -94,7 +94,205 @@
 
           </b-card>
         </b-collapse>
+
+      <!-- Select Keywords card -->
+      <b-card>
+        <!-- Date Header Row -->
+        <b-row class="header-row">
+          <b-col class="header" id="date-header-1">
+            <h3>11/22</h3>
+          </b-col>
+          <b-col class="header" id="date-header-2">
+            <h3>11/23</h3>
+          </b-col>
+          <b-col class="header" id="date-header-3">
+            <h3>11/24</h3>
+          </b-col>
+          <b-col class="header" id="date-header-4">
+            <h3>11/25</h3>
+          </b-col>
+          <b-col class="header" id="date-header-5">
+            <h3>11/26</h3>
+          </b-col>
+          <b-col class="header" id="date-header-6">
+            <h3>11/27</h3>
+          </b-col>
+          <b-col class="header" id="date-header-7">
+            <h3>11/28</h3>
+          </b-col>
+        </b-row>
+         <!-- Keywords Row -->
+        <b-row class="keywords-row">
+          <!-- Day 1 Keywords -->
+          <b-col class="keywords-col" id="keywords-day-1">
+            <p>Enter Keywords:</p>
+            <!-- Cold Keywords Dropdown Button -->
+            <b-button variant="outline-info" v-b-toggle.day1-cold-collapse class="button-dropdown">Cold <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day1-cold-collapse">
+              <b-form-checkbox-group v-model="day1_keywords.cold" id="day1-cold-checkboxes" :options="coldOptions"></b-form-checkbox-group>
+            </b-collapse>
+            <br>
+            <!-- Warm Keywords Dropdown Button -->
+            <b-button variant="outline-warning" v-b-toggle.day1-warm-collapse class="button-dropdown">Warm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day1-warm-collapse">
+              <b-form-checkbox-group v-model="day1_keywords.warm" id="day1-warm-checkboxes" :options="warmOptions"></b-form-checkbox-group>
+            </b-collapse>
+            <br>
+            <!-- Storm Keywords Dropdown Button -->
+            <b-button variant="outline-secondary" v-b-toggle.day1-storm-collapse class="button-dropdown">Storm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day1-storm-collapse">
+              <b-form-checkbox-group v-model="day1_keywords.storm" id="day1-storm-checkboxes" :options="stormOptions"></b-form-checkbox-group>
+            </b-collapse>
+            <br>
+            <!-- Precipitation Keywords Dropdown Button -->
+            <b-button variant="outline-primary" v-b-toggle.day1-precip-collapse class="button-dropdown">Precipitation <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day1-precip-collapse">
+              <b-form-checkbox-group v-model="day1_keywords.precip" id="day1-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
+            </b-collapse>
+            <b-button variant="info" @click="saveDay1Keywords()" style="margin-top: 10px; width: 80%">Save</b-button>
+          </b-col>
+          <!-- Day 2 Keywords -->
+          <b-col class="keywords-col" id="keywords-day-2">
+            <p>Enter Keywords:</p>
+            <b-button variant="outline-info" v-b-toggle.day2-cold-collapse class="button-dropdown">Cold <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day2-cold-collapse">
+              <b-form-checkbox-group v-model="day2_keywords.cold" id="day2-cold-checkboxes" :options="coldOptions"></b-form-checkbox-group>
+            </b-collapse>
+            <br>
+            <b-button variant="outline-warning" v-b-toggle.day2-warm-collapse class="button-dropdown">Warm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day2-warm-collapse">
+              <b-form-checkbox-group v-model="day2_keywords.warm" id="day2-warm-checkboxes" :options="warmOptions"></b-form-checkbox-group>
+            </b-collapse>
+            <br>
+            <b-button variant="outline-secondary" v-b-toggle.day2-storm-collapse class="button-dropdown">Storm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day2-storm-collapse">
+              <b-form-checkbox-group v-model="day2_keywords.storm" id="day2-storm-checkboxes" :options="stormOptions"></b-form-checkbox-group>
+            </b-collapse>
+            <br>
+            <b-button variant="outline-primary" v-b-toggle.day2-precip-collapse class="button-dropdown">Precipitation <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day2-precip-collapse">
+              <b-form-checkbox-group v-model="day2_keywords.precip" id="day2-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
+            </b-collapse>
+          </b-col>
+          <!-- Day 3 Keywords -->
+          <b-col class="keywords-col" id="keywords-day-3">
+            <p>Enter Keywords:</p>
+            <b-button variant="outline-info" v-b-toggle.day3-cold-collapse class="button-dropdown">Cold <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day3-cold-collapse">
+              <b-form-checkbox-group v-model="day3_keywords.cold" id="day3-cold-checkboxes" :options="coldOptions"></b-form-checkbox-group>
+            </b-collapse>
+            <br>
+            <b-button variant="outline-warning" v-b-toggle.day3-warm-collapse class="button-dropdown">Warm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day3-warm-collapse">
+              <b-form-checkbox-group v-model="day3_keywords.warm" id="day3-warm-checkboxes" :options="warmOptions"></b-form-checkbox-group>
+            </b-collapse>
+            <br>
+            <b-button variant="outline-secondary" v-b-toggle.day3-storm-collapse class="button-dropdown">Storm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day3-storm-collapse">
+              <b-form-checkbox-group v-model="day3_keywords.storm" id="day3-storm-checkboxes" :options="stormOptions"></b-form-checkbox-group>
+            </b-collapse>
+            <br>
+            <b-button variant="outline-primary" v-b-toggle.day3-precip-collapse class="button-dropdown">Precipitation <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day3-precip-collapse">
+              <b-form-checkbox-group v-model="day3_keywords.precip" id="day3-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
+            </b-collapse>
+          </b-col>
+          <!-- Day 4 Keywords -->
+          <b-col class="keywords-col" id="keywords-day-4">
+            <p>Enter Keywords:</p>
+            <b-button variant="outline-info" v-b-toggle.day4-cold-collapse class="button-dropdown">Cold <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day4-cold-collapse">
+              <b-form-checkbox-group v-model="day4_keywords.cold" id="day4-cold-checkboxes" :options="coldOptions"></b-form-checkbox-group>
+            </b-collapse>
+            <br>
+            <b-button variant="outline-warning" v-b-toggle.day4-warm-collapse class="button-dropdown">Warm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day4-warm-collapse">
+              <b-form-checkbox-group v-model="day4_keywords.warm" id="day4-warm-checkboxes" :options="warmOptions"></b-form-checkbox-group>
+            </b-collapse>
+            <br>
+            <b-button variant="outline-secondary" v-b-toggle.day4-storm-collapse class="button-dropdown">Storm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day4-storm-collapse">
+              <b-form-checkbox-group v-model="day4_keywords.storm" id="day4-storm-checkboxes" :options="stormOptions"></b-form-checkbox-group>
+            </b-collapse>
+            <br>
+            <b-button variant="outline-primary" v-b-toggle.day4-precip-collapse class="button-dropdown">Precipitation <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day4-precip-collapse">
+              <b-form-checkbox-group v-model="day4_keywords.precip" id="day4-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
+            </b-collapse>
+          </b-col>
+          <!-- Day 5 Keywords -->
+          <b-col class="keywords-col" id="keywords-day-5">
+            <p>Enter Keywords:</p>
+            <b-button variant="outline-info" v-b-toggle.day5-cold-collapse class="button-dropdown">Cold <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day5-cold-collapse">
+              <b-form-checkbox-group v-model="day5_keywords.cold" id="day5-cold-checkboxes" :options="coldOptions"></b-form-checkbox-group>
+            </b-collapse>
+            <br>
+            <b-button variant="outline-warning" v-b-toggle.day5-warm-collapse class="button-dropdown">Warm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day5-warm-collapse">
+              <b-form-checkbox-group v-model="day5_keywords.warm" id="day5-warm-checkboxes" :options="warmOptions"></b-form-checkbox-group>
+            </b-collapse>
+            <br>
+            <b-button variant="outline-secondary" v-b-toggle.day5-storm-collapse class="button-dropdown">Storm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day5-storm-collapse">
+              <b-form-checkbox-group v-model="day5_keywords.storm" id="day5-storm-checkboxes" :options="stormOptions"></b-form-checkbox-group>
+            </b-collapse>
+            <br>
+            <b-button variant="outline-primary" v-b-toggle.day5-precip-collapse class="button-dropdown">Precipitation <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day5-precip-collapse">
+              <b-form-checkbox-group v-model="day5_keywords.precip" id="day5-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
+            </b-collapse>
+          </b-col>
+          <!-- Day 6 Keywords -->
+          <b-col class="keywords-col" id="keywords-day-6">
+            <p>Enter Keywords:</p>
+            <b-button variant="outline-info" v-b-toggle.day6-cold-collapse class="button-dropdown">Cold <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day6-cold-collapse">
+              <b-form-checkbox-group v-model="day6_keywords.cold" id="day6-cold-checkboxes" :options="coldOptions"></b-form-checkbox-group>
+            </b-collapse>
+            <br>
+            <b-button variant="outline-warning" v-b-toggle.day6-warm-collapse class="button-dropdown">Warm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day6-warm-collapse">
+              <b-form-checkbox-group v-model="day6_keywords.warm" id="day6-warm-checkboxes" :options="warmOptions"></b-form-checkbox-group>
+            </b-collapse>
+            <br>
+            <b-button variant="outline-secondary" v-b-toggle.day6-storm-collapse class="button-dropdown">Storm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day6-storm-collapse">
+              <b-form-checkbox-group v-model="day6_keywords.storm" id="day6-storm-checkboxes" :options="stormOptions"></b-form-checkbox-group>
+            </b-collapse>
+            <br>
+            <b-button variant="outline-primary" v-b-toggle.day6-precip-collapse class="button-dropdown">Precipitation <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day6-precip-collapse">
+              <b-form-checkbox-group v-model="day6_keywords.precip" id="day6-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
+            </b-collapse>
+          </b-col>
+          <!-- Day 7 Keywords -->
+          <b-col class="keywords-col" id="keywords-day-7">
+            <p>Enter Keywords:</p>
+            <b-button variant="outline-info" v-b-toggle.day7-cold-collapse class="button-dropdown">Cold <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day7-cold-collapse">
+              <b-form-checkbox-group v-model="day7_keywords.cold" id="day7-cold-checkboxes" :options="coldOptions"></b-form-checkbox-group>
+            </b-collapse>
+            <br>
+            <b-button variant="outline-warning" v-b-toggle.day7-warm-collapse class="button-dropdown">Warm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day7-warm-collapse">
+              <b-form-checkbox-group v-model="day7_keywords.warm" id="day7-warm-checkboxes" :options="warmOptions"></b-form-checkbox-group>
+            </b-collapse>
+            <br>
+            <b-button variant="outline-secondary" v-b-toggle.day7-storm-collapse class="button-dropdown">Storm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day7-storm-collapse">
+              <b-form-checkbox-group v-model="day7_keywords.storm" id="day7-storm-checkboxes" :options="stormOptions"></b-form-checkbox-group>
+            </b-collapse>
+            <br>
+            <b-button variant="outline-primary" v-b-toggle.day7-precip-collapse class="button-dropdown">Precipitation <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+            <b-collapse id="day7-precip-collapse">
+              <b-form-checkbox-group v-model="day7_keywords.precip" id="day7-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
+            </b-collapse>
+          </b-col>
+        </b-row>
+
       </b-card>
+            </b-card>
     </b-card-group>
   </div>
 </template>
@@ -107,7 +305,7 @@ export default {
   components: { DatePicker },
   data () {
     return {
-      // Weather Variables from NOAA
+      // Weather Variables to give NOAA
       station_name: 'DTW', // null,
       station_dist: 2, // null,
       num_thunderous_days: 0, // null,
@@ -117,6 +315,19 @@ export default {
       avg_min_temp: 45, // null,
       total_rain: 2, // null,
       total_snow: 0, // null,
+      // Twitter Variables to give API
+      day1_keywords: {
+        cold: [],
+        warm: [],
+        storm: [],
+        precip: []
+      },
+      day2_keywords: {},
+      day3_keywords: {},
+      day4_keywords: {},
+      day5_keywords: {},
+      day6_keywords: {},
+      day7_keywords: {},
       // Other Variables
       total_precip: null,
       dateRange: null,
@@ -134,6 +345,18 @@ export default {
         { text: 'Chicago', value: 'Chicago,41.876584,-87.639529,10.0,https://rb.gy/qwsmxo' },
         { text: 'Miami', value: 'Miami,25.783447,-80.214909,5.0,https://rb.gy/j3u5bo' },
         { text: 'Seattle', value: 'Seattle,47.606609,-122.332815,8.0,https://rb.gy/ypkbxo' }
+      ],
+      coldOptions: [
+        'Cold', 'Icy', 'Snowy', 'Frigid', 'Frost', 'Slippery', 'Blizzard', 'Freezing'
+      ],
+      warmOptions: [
+        'Warm', 'Nice out', 'Sunny', 'Sunshine', 'Hot day', 'Humid', 'Heat wave', 'Dry heat'
+      ],
+      stormOptions: [
+        'Wind', 'Windy', 'Brisk', 'Gusty', 'Hurricane', 'Storm', 'Nor\'easter', 'Thunder', 'Lightning'
+      ],
+      precipOptions: [
+        'Rain', 'Snow', 'Cloudy', 'Sleet', 'Hail', 'Fog', 'Rainy', 'Dreary', 'Gloomy', 'Overcast', 'Flood'
       ],
       imageProps: { blank: true, height: 75, width: 400, class: 'm1' }
     }
@@ -172,12 +395,37 @@ export default {
         this.radius = parsedCityData[3]
         this.circleSelectorLink = parsedCityData[4]
       }
+    },
+    // Function that attaches to the save button
+    saveDay1Keywords () {
+      var keywords = this.day1_keywords.cold
+      keywords = keywords.concat(this.day1_keywords.warm)
+      keywords = keywords.concat(this.day1_keywords.storm)
+      keywords = keywords.concat(this.day1_keywords.precip)
+      console.log(keywords)
+
+      // Here is the spot to pass keywords to the backend
     }
   }
 }
 </script>
 
 <style>
+.button-dropdown{
+  padding: 3px 10px;
+  margin-bottom: 3px;
+}
+.header{
+  border: 3px solid skyblue;
+  text-align: center;
+  vertical-align: middle;
+  margin: 1px 1px 0px 1px;
+  padding-top: 5px;
+}
+.keywords-col{
+  border: 3px solid skyblue;
+  margin: 0px 1px 1px 1px;
+}
 label{
   margin-right: 5px;
   margin-left: 10px;
