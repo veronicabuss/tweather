@@ -294,6 +294,12 @@
       </b-card>
             </b-card>
     </b-card-group>
+
+      <img v-bind:src="'data:image/png;base64,'+ plot1" width="500">
+      <img v-bind:src="'data:image/png;base64,'+ plot2" width="500">
+      <img v-bind:src="'data:image/png;base64,'+ plot3" width="500">
+      <img v-bind:src="'data:image/png;base64,'+ plot4" width="500">
+
   </div>
 </template>
 
@@ -305,6 +311,11 @@ export default {
   components: { DatePicker },
   data () {
     return {
+      // plots:
+      plot1: '',
+      plot2: '',
+      plot3: '',
+      plot4: '',
       // Weather Variables to give NOAA
       station_name: 'DTW', // null,
       station_dist: 2, // null,
@@ -378,11 +389,23 @@ export default {
 
       // Push the date range to the backend
       const path = 'http://localhost:5000/api/request'
-      const json = JSON.stringify({date: this.dateRange, city: this.cityName})
+      const json = JSON.stringify({latitude: this.latitude, longitude: this.longitude, date: this.dateRange})
       axios.post(path, json, {
         headers: {
           'Content-Type': 'application/json'
         }
+      }).then((response) => {
+        console.log(response)
+        this.cityName = response['data']['city']
+        // PLACEHOLDER
+        this.station_name = response['data']['state']
+        // IMAGES
+        this.plot1 = response['data']['plots'][0]
+        this.plot2 = response['data']['plots'][1]
+        this.plot3 = response['data']['plots'][2]
+        this.plot4 = response['data']['plots'][3]
+      }).catch(function (error) {
+        console.log(error)
       })
     },
     // On select of a city, updates the manual select buttons with prepopulated data
