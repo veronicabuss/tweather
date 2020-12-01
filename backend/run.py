@@ -70,49 +70,25 @@ def do_request():
 
 
 
-
+    return_data = {}
     data = weather_api.api_call(lat,lon,startDate,endDate)
     #get name of place
     city = data[startDate]['city']
     state = data[startDate]['state']
 
-    plots.makePlots(data)
+    images = plots.makePlots(data)
+    return_data['city'] = city
+    return_data['state'] = state
+    #decode images for json serialization
+    for i in range(len(images)):
+        images[i] = images[i].decode()
 
-    #api_call(startDate,endDate,station_id,myToken)
+    return_data['plots'] = images
+    return_json = json.dumps(return_data)
 
 
-    return request.args;
 
-
-# def api_call(startDate,endDate,station_id,Token):
-#     dates_temp = []
-#     dates_prcp = []
-#     temps = []
-#     prcp = []
-#
-#     #make the api call
-#     r = requests.get('https://www.ncdc.noaa.gov/cdo-web/api/v2/data?datasetid=GHCND&datatypeid=TAVG&limit=1000&stationid='+station_id+'&startdate='+startDate+'&enddate='+endDate, headers={'token':Token})
-#     #load the api response as a json
-#     d = json.loads(r.text)
-#
-#     # get all items in the response which are average temperature readings
-#     avg_temps = [item for item in d['results'] if item['datatype']=='TAVG']
-#     #get the date field from all average temperature readings
-#     dates_temp += [item['date'] for item in avg_temps]
-#     #get the actual average temperature from all average temperature readings
-#     temps += [item['value'] for item in avg_temps]
-#
-#     #initialize dataframe
-#     df_temp = pd.DataFrame()
-#
-#     #populate date and average temperature fields (cast string date to datetime and convert temperature from tenths of Celsius to Fahrenheit)
-#     df_temp['date'] = [datetime.strptime(d, "%Y-%m-%dT%H:%M:%S") for d in dates_temp]
-#     df_temp['avgTemp'] = [float(v)/10.0*1.8 + 32 for v in temps]
-#
-#     print(df_temp)
-#
-#     return
-
+    return return_json;
 
 
 @app.route('/api/twitter_request', methods=['POST'])
