@@ -126,12 +126,20 @@ def do_request():
 def do_twitter_request():
     content = request.json
 
-    #still need to get attibutes out of json from front end
-    longitude = '-87.785555'
-    latitude = '41.812925'
-    radius = '50'
-    query = 'sunny -filter:retweets'
-    date = '2020-11-16'
-    json_return_value = get_tweets(longitude,latitude,radius,query, date)
+    query = ''
+    for word in content['keywords']:
+        query = query + ' ' + word
+    query = query + '-filter:retweets'
+    longitude = content['longitude']
+    latitude = content['latitude']
+    radius = content['radius']
+    date = content['date']
 
-    return
+    # longitude = '-87.785555'
+    # latitude = '41.812925'
+    # radius = '50'
+    # query = 'sunny -filter:retweets'
+    #date = '2020-11-16'
+    json_return_value = twitter_request.get_tweets(longitude,latitude,radius,query, date)
+    #print(json_return_value)
+    return json_return_value

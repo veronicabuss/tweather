@@ -33,7 +33,7 @@ def get_tweets(long,lat,rad,q,datestr):
     geo = latitude+','+longitude+','+radius+'km'
     target_date = datetime.datetime.strptime(datestr,'%Y-%m-%d').date()
     api_date = target_date+ datetime.timedelta(days=1)
-    print('target date: {} api_date: {}'.format(target_date, api_date))
+    #print('target date: {} api_date: {}'.format(target_date, api_date))
     #number of tweets to analize
     cnt = 10
     total_feeling = 0
@@ -68,13 +68,13 @@ def get_tweets(long,lat,rad,q,datestr):
     #     print('No tweets for selection')
 
     #print(max_min_tweets)
-
     return_dictionary['number_of_tweets'] = valid_tweet_count
-    outer_dictionary = {}
-    outer_dictionary['date'] = [target_date.strftime('%Y-%m-%d'),return_dictionary]
+    return_dictionary['date'] = target_date.strftime('%Y-%m-%d')
+    #outer_dictionary = {}
+    #outer_dictionary['date'] = [target_date.strftime('%Y-%m-%d'),return_dictionary]
 
     #print(return_dictionary)
-    print(json.dumps(outer_dictionary))
+    #print(json.dumps(outer_dictionary))
     return(json.dumps(return_dictionary))
 
 #test code

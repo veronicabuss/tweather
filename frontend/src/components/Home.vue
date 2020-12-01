@@ -402,9 +402,22 @@ export default {
       keywords = keywords.concat(this.day1_keywords.warm)
       keywords = keywords.concat(this.day1_keywords.storm)
       keywords = keywords.concat(this.day1_keywords.precip)
-      console.log(keywords)
 
-      // Here is the spot to pass keywords to the backend
+      const path = 'http://localhost:5000/api/twitter_request'
+      var oneWeekAgo = new Date()
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
+      oneWeekAgo = oneWeekAgo.toISOString().split('T')[0]
+
+      const json = JSON.stringify({keywords: keywords, latitude: this.latitude, longitude: this.longitude, radius: this.radius, date: oneWeekAgo})
+      axios.post(path, json, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then(function (response) {
+        console.log(response)
+      }).catch(function (error) {
+        console.log(error)
+      })
     }
   }
 }
