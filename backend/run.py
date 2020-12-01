@@ -53,37 +53,30 @@ def random_number():
 
 @app.route('/api/request', methods=['POST'])
 def do_request():
-
+    #need lat, long, startDate,endDate
     content = request.json
     # get data from json
-    if 'date' and 'city' not in content.keys():
+    #latitude longitude date
+    if 'latitude' and 'longitude' and 'date' not in content.keys():
         return "bad json"
 
-    for key in content.keys():
-        print('my key: {}'.format(key))
-        if(key == 'date'):
-            print('we have a date {}'.format(content['date']))
-            startDate = content['date'][0]
-            endDate = content['date'][1]
-            startDate = startDate.split('T')[0]
-            endDate = endDate.split('T')[0]
-            print(startDate)
-            print(endDate)
-        if(key == 'city'):
-            print('we have a city')
+
+    startDate = content['date'][0]
+    endDate = content['date'][1]
+    startDate = startDate.split('T')[0]
+    endDate = endDate.split('T')[0]
+    lat = content['latitude']
+    lon = content['longitude']
 
 
-    #Hardcoded station for now.
-    station_id = 'GHCND:USW00023129'
-    # station_id = 'GHCND:USW000'+station_id
-    # station_id = str(station_id)  # not sure why, but need to cast str()
-    #add the access token you got from NOAA
-    # myToken = Token.token()
-    datajson = weather_api.callNOAA(staid,beg,end)
 
-    datalist = weather_api.getData(datajson)
 
-    plots.makePlots(station_id,datalist)
+    data = weather_api.api_call(lat,lon,startDate,endDate)
+    #get name of place
+    city = data[startDate]['city']
+    state = data[startDate]['state']
+
+    plots.makePlots(data)
 
     #api_call(startDate,endDate,station_id,myToken)
 
@@ -134,7 +127,7 @@ def do_twitter_request():
     latitude = content['latitude']
     radius = content['radius']
     date = content['date']
-
+    print(date)
     # longitude = '-87.785555'
     # latitude = '41.812925'
     # radius = '50'

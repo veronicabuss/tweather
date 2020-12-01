@@ -1,35 +1,34 @@
-# import requests                     # needed to make web requests
-# import pandas as pd                 # store the data we get as a dataframe
-# import json                         # convert the response as a strcuctured json
 import numpy as np                  # mathematical operations on lists
-# from datetime import datetime       # parse the datetimes we get from NOAA
 import matplotlib.pyplot as plt     # plotting library
-# import math                         # math functions
-# import os                           # os functions
-# import csv                          # csv file funcitons
 
-def makePlots(sta,data):
+def makePlots(data):
     # datalist is: calvec, PRCP, SNOW, SNWD, TMAX, TMIN, ACSC, AWDR, AWND, TAVG, WV03
     # units:        date,   in,   in,    in,   *F,  *F,   %,    *,   mph,   *F,   #
     # breakout datalist
-    staname = sta[1][2]
-    dates = data[0]; prcp = data[1]; snow = data[2]; snwd = data[3]
-    tmax = data[4]; tmin = data[5]; acsc = data[6]; awdr = data[7]
-    awnd = data[8]; tavg = data[9]; wv03 = data[10]
+    #staname = sta[1][2]
+    # dates = data[0]; prcp = data[1]; snow = data[2]; snwd = data[3]
+    # tmax = data[4]; tmin = data[5]; acsc = data[6]; awdr = data[7]
+    # awnd = data[8]; tavg = data[9]; wv03 = data[10]
 
-    nobs = len(dates)
-    doobs = np.floor(nobs/10)
+    #idk about WV03, SNWD
+    dates, prcp, snow, tmax, tmin, acsc, awdr, awnd, tavg = ([] for i in range (9))
+    for date in data.keys():
+        day_data = data[date]
+        dates.append(date)
+        prcp.append(day_data['totalprecip_in'])
+        snow.append(day_data['snow_in'])
+        tmax.append(day_data['maxtemp_f'])
+        tmin.append(day_data['mintemp_f'])
+        acsc.append(day_data['avg_cloud_cover_percent'])
+        awdr.append(day_data['avg_wind_dir'])
+        awnd.append(day_data['avg_wind_speed'])
+        tavg.append(day_data['avgtemp_f'])
 
-    duse = []
-    xvals = []
-    ii = 0
-    while ii < nobs:
-        xvals.append(ii)
-        duse.append(dates[ii])
-        ii = int(ii + np.floor(nobs/10))
+
+    duse = dates
+    xvals = range(0,7)
 
     # plot for wind speed+direction
-
     fig, ax1 = plt.subplots(figsize=(10, 6))
     ax1.plot(range(len(awdr)),awdr, color='blue', linewidth=2, marker='o', markersize=6)
     curylim = ax1.get_ylim()
@@ -48,7 +47,6 @@ def makePlots(sta,data):
     plt.tight_layout()
    # plt.savefig('testWIND.jpg')
     plt.show()
-
 
     # plot for temp+precipR/S
     fig, ax1 = plt.subplots(figsize=(10, 6))
@@ -121,14 +119,14 @@ def makePlots(sta,data):
     plt.xticks(rotation=45)
 
 
-    ax2 = ax1.twinx()
-    ax2.plot(range(len(snwd)),snwd, color='red', linewidth=2, marker='o', markersize=6)
-    ax2.set_ylabel('Snow Depth (in)', color='red', fontweight='bold')
-    ax2.tick_params(axis='y', labelcolor='red')
-    plt.title('%-cloudy and Snow Depth',  fontweight='bold', fontsize=24)
-    plt.tight_layout()
-   # plt.savefig('testSD.jpg')
-    plt.show()
+   #  ax2 = ax1.twinx()
+   #  ax2.plot(range(len(snwd)),snwd, color='red', linewidth=2, marker='o', markersize=6)
+   #  ax2.set_ylabel('Snow Depth (in)', color='red', fontweight='bold')
+   #  ax2.tick_params(axis='y', labelcolor='red')
+   #  plt.title('%-cloudy and Snow Depth',  fontweight='bold', fontsize=24)
+   #  plt.tight_layout()
+   # # plt.savefig('testSD.jpg')
+   #  plt.show()
 
 
     # plot for histograms

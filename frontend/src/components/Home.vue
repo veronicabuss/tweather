@@ -378,7 +378,7 @@ export default {
 
       // Push the date range to the backend
       const path = 'http://localhost:5000/api/request'
-      const json = JSON.stringify({date: this.dateRange, city: this.cityName})
+      const json = JSON.stringify({latitude: this.latitude, longitude: this.longitude, date: this.dateRange})
       axios.post(path, json, {
         headers: {
           'Content-Type': 'application/json'
