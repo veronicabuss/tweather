@@ -72,11 +72,23 @@ def do_request():
 
     return_data = {}
     data = weather_api.api_call(lat,lon,startDate,endDate)
+    images = plots.makePlots(data)
+
+    week_data = weather_api.parse_data(data)
+    return_data['week'] = week_data
+    #need:
+        # maxwind_mph
+        # avgtemp_f
+        # maxtemp_f
+        # mintemp_f
+        # totalprecip_in
+        # snow_in
+        # avg_wind_speed
+        # avghumidity
+        # avg_cloud_cover_percent
     #get name of place
     city = data[startDate]['city']
     state = data[startDate]['state']
-
-    images = plots.makePlots(data)
     return_data['city'] = city
     return_data['state'] = state
     #decode images for json serialization
