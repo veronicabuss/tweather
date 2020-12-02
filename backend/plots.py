@@ -97,25 +97,9 @@ def makePlots(data):
 
 
 
-    # xvals for side dashes
+     # xvals for side dashes
     xsides = list(range(len(tavg)+1))
     for i in xsides: xsides[i] = xsides[i] - 0.5
-
-    # plot for temp+precipR/S
-    fig, ax1 = plt.subplots(figsize=(10, 6))
-    ax1.plot(range(len(tavg)),tavg, color='red', linewidth=2, marker='o', markersize=6)
-    if tlims[0] < 32:
-        curxlim = ax1.get_xlim()
-        ax1.hlines(32,curxlim[0]-0.5,curxlim[1]+0.5,color='lightcoral',linestyle='--')
-        ax1.text(-0.8, 33, '32*F', color='lightcoral', fontsize=14, rotation=90)
-    ax1.set_ylim(tlims)
-    curylim = ax1.get_ylim()
-    ax1.vlines(xsides,curylim[0],curylim[1],color='silver',linestyle='--')
-    ax1.set_xlabel('Date', fontweight='bold',fontsize=18)
-    ax1.set_ylabel('Average Temperature (*F)',color='red', fontweight='bold',fontsize=18)
-    ax1.tick_params(axis='y', labelcolor='red')
-    plt.xticks(ticks=xvals, labels=duse)
-    plt.xticks(rotation=0)
 
     width = 0.35/2
     xbarm = list(range(len(snow)))
@@ -123,20 +107,47 @@ def makePlots(data):
     xbarp = list(range(len(snow)))
     for ii in range(len(xbarp)): xbarp[ii] = xbarp[ii] + width
 
+    # plot for temp+precipR/S
+    fig, ax1 = plt.subplots(figsize=(10, 6))
+    ax1.bar(xbarm,snow, width*1.75, color='lightskyblue')
+    ax1.bar(xbarp,prcp, width*1.75, color='limegreen')
+    ax1.set_ylabel('Precipitation (in)', color='black', fontweight='bold',fontsize=18)
+    ax1.tick_params(axis='y', labelcolor='black')
+    curxlim = ax1.get_xlim()
+    curylim = ax1.get_ylim()
+    ax1.set_ylim([curylim[0],curylim[1]*1.1])
+    curylim = ax1.get_ylim()
+    xtxt1 = curxlim[1]-0.95*(curxlim[1]-curxlim[0])
+    xtxt2 = curxlim[1]-0.83*(curxlim[1]-curxlim[0])
+    lin1 = curylim[1]-0.05*(curylim[1]-curylim[0])
+    ax1.text(xtxt1,lin1,'Rain',color='green',fontweight='bold',fontsize=18)
+    ax1.text(xtxt2,lin1,'Snow',color='blue',fontweight='bold',fontsize=18)
+    ax1.set_xlabel('Date', fontweight='bold',fontsize=18)
+
 
     ax2 = ax1.twinx()
-    ax2.bar(xbarm,snow, width*1.75, color='blue')
-    ax2.bar(xbarp,prcp, width*1.75, color='green')
-    ax2.set_ylabel('Precipitation (in)', color='black', fontweight='bold',fontsize=18)
-    ax2.tick_params(axis='y', labelcolor='black')
-    ax1.plot(range(len(tavg)),tavg, color='red', linewidth=2, marker='o', markersize=6)
+    ax2.plot(range(len(tmin)),tmin, color='purple', linewidth=2,marker='o', markersize=6)
+    ax2.plot(range(len(tavg)),tavg, color='black',linewidth=2,marker='o', markersize=6)
+    ax2.plot(range(len(tmax)),tmax, color='red',linewidth=2,marker='o', markersize=6)
     curxlim = ax2.get_xlim()
+    if tlims[0] < 32:
+        ax2.hlines(32,curxlim[0]-0.5,curxlim[1]+0.5,color='silver',linestyle='--')
+        ax2.text(6.8, 33, '32*F', color='silver', fontsize=14, rotation=0)
+    ax2.set_ylim(tlims)
     curylim = ax2.get_ylim()
-    xtxt = curxlim[1]-0.2*(curxlim[1]-curxlim[0])
-    lin1 = curylim[1]-0.1*(curylim[1]-curylim[0])
-    lin2 = curylim[1]-0.15*(curylim[1]-curylim[0])
-    plt.text(xtxt,lin1,'Rain',color='green',fontweight='bold',fontsize=18)
-    plt.text(xtxt,lin2,'Snow',color='blue',fontweight='bold',fontsize=18)
+    xtxt1 = curxlim[1]-0.42*(curxlim[1]-curxlim[0])
+    xtxt2 = curxlim[1]-0.28*(curxlim[1]-curxlim[0])
+    xtxt3 = curxlim[1]-0.15*(curxlim[1]-curxlim[0])
+    lin1 = curylim[1]-0.05*(curylim[1]-curylim[0])
+    ax2.text(xtxt1,lin1,'TMIN',color='purple',fontweight='bold',fontsize=18)
+    ax2.text(xtxt2,lin1,'TAVG',color='black',fontweight='bold',fontsize=18)
+    ax2.text(xtxt3,lin1,'TMAX',color='red',fontweight='bold',fontsize=18)
+    ax2.vlines(xsides,curylim[0],curylim[1],color='silver',linestyle='--')
+    ax2.set_xlabel('Date', fontweight='bold',fontsize=18)
+    ax2.set_ylabel('Average Temperature (*F)',color='black', fontweight='bold',fontsize=18)
+    ax2.tick_params(axis='y', labelcolor='black')
+    plt.xticks(ticks=xvals, labels=duse)
+    plt.xticks(rotation=0)
     plt.title('Temperature and Precipitation',  fontweight='bold', fontsize=24)
     plt.tight_layout()
    # plt.savefig('testTP.jpg')
