@@ -115,7 +115,6 @@ def do_twitter_request():
     latitude = content['latitude']
     radius = content['radius']
     date = content['date']
-    print(date)
     # longitude = '-87.785555'
     # latitude = '41.812925'
     # radius = '50'
