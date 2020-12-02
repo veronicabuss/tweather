@@ -7,6 +7,58 @@ import matplotlib.pyplot as plt
 import plots
 import Token
 
+def eval_max(old,new):
+    if(old > new):
+        return old
+    else:
+        return new
+
+def eval_min(old,new):
+    if(old < new):
+        return old
+    else:
+        return new
+
+def parse_data(data):
+    week = {}
+    maxtemp_f = -999
+    maxwind_mph = 0
+    mintemp_f = 999
+    total_cloud_cover, total_humidity, total_wind_speed, total_snow, total_precip, total_temp = (0 for i in range(6))
+    for day in data.keys():
+        one_day = data[day]
+        total_cloud_cover += one_day['avg_cloud_cover_percent']
+        total_humidity += one_day['avghumidity']
+        total_wind_speed += one_day['avg_wind_speed']
+        total_snow += one_day['snow_in']
+        total_precip += one_day['totalprecip_in']
+        total_temp += one_day['avgtemp_f']
+        maxtemp_f = eval_max(one_day['maxtemp_f'],maxtemp_f)
+        maxwind_mph = eval_max(one_day['maxwind_mph'],maxwind_mph)
+        mintemp_f = eval_min(one_day['mintemp_f'],mintemp_f)
+        # mintemp_f
+        # maxwind_mph
+
+    num_days = len(data)
+    week['avg_cloud_cover_percent'] = total_cloud_cover/num_days
+    week['avghumidity'] = total_humidity/num_days
+    week['avg_wind_speed'] = total_wind_speed/num_days
+    week['snow_in'] = total_snow/num_days
+    week['avg_precip'] = total_precip/num_days
+    week['avgtemp_f'] = total_temp/num_days
+    week['maxtemp_f'] = maxtemp_f
+    week['mintemp_f'] = mintemp_f
+    week['maxwind_mph'] = maxwind_mph
+            # maxwind_mph
+            # avgtemp_f
+            # maxtemp_f
+            # mintemp_f
+            # totalprecip_in
+            # snow_in
+            # avg_wind_speed
+            # avghumidity
+            # avg_cloud_cover_percent
+    return week
 
 def api_call(latitude,longitude,startDate,endDate):
     key = Token.token()
