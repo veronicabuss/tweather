@@ -301,11 +301,10 @@
             </b-card>
     </b-card-group>
 
-      <img v-bind:src="'data:image/png;base64,'+ plot1">
+      <img v-bind:src="'data:image/png;base64,'+ plot1" width="500">
       <img v-bind:src="'data:image/png;base64,'+ plot2" width="500">
       <img v-bind:src="'data:image/png;base64,'+ plot3" width="500">
       <img v-bind:src="'data:image/png;base64,'+ plot4" width="500">
-      <b-button @click="toggleClass"> Click me</b-button>
 
   </div>
 </template>
