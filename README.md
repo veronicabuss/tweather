@@ -17,13 +17,18 @@ Virtual Environment:
 
 Virtual Environment on Windows:
 - `python3 -m venv venv`
-- `cd venv/bin`
+- `cd venv/Scripts`
 - `& .\activate`
+- `pip install -r requirements.txt`
 - `deactivate`
 
 To run the back end:
 `./startBack.sh`
 
-To run the front end:
+Extra steps for windows:
+$env:FLASK_APP = "./backend/run.py"
+flash run
+
+To run the front end (in a diff terminal from flask):
 `cd frontend`
 `npm run dev`

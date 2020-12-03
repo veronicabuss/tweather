@@ -35,7 +35,7 @@ def get_tweets(long,lat,rad,q,datestr):
     api_date = target_date+ datetime.timedelta(days=1)
     #print('target date: {} api_date: {}'.format(target_date, api_date))
     #number of tweets to analize
-    cnt = 10
+    cnt = 200
     total_feeling = 0
     tweets = [tweet for tweet in tweepy.Cursor(api.search, q = query, geocode = geo, lang = lang, until = api_date, tweet_mode = 'extended').items(cnt)]
     max_min_tweets = {"min": [1,"min tweat"], "max": [-1, "max tweet"]}
@@ -69,13 +69,14 @@ def get_tweets(long,lat,rad,q,datestr):
 
     #print(max_min_tweets)
     return_dictionary['number_of_tweets'] = valid_tweet_count
-    return_dictionary['date'] = target_date.strftime('%Y-%m-%d')
-    #outer_dictionary = {}
-    #outer_dictionary['date'] = [target_date.strftime('%Y-%m-%d'),return_dictionary]
+    #return_dictionary['date'] = target_date.strftime('%Y-%m-%d')
+    outer_dictionary = {}
+    key_day = target_date.strftime('%Y-%m-%d')
+    outer_dictionary[key_day] = return_dictionary
 
     #print(return_dictionary)
     #print(json.dumps(outer_dictionary))
-    return(json.dumps(return_dictionary))
+    return(json.dumps(outer_dictionary))
 
 #test code
 if __name__ == "__main__":
