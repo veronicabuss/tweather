@@ -71,15 +71,18 @@
             NOTE: The blank prop takes precedence over the src prop. If you set both and later,
             set blank to false the image specified in src will then be displayed. -->
             <b-row>
-              <b-col style="margin: 0 -10px">
-                <b-img v-bind:src="'data:image/png;base64,'+ plot2" fluid alt="Temperature/Precipitation Plot" style="margin: 0"></b-img>
+              <b-col style="margin: 0 -10px;">
+                <b-img v-bind:src="'data:image/png;base64,'+ plot2" alt="Temperature/Precipitation Plot" @mouseover="plotTriggered(0, true)" @mouseleave="plotTriggered(0, false)"
+                :style="[this.mouseOverTriggered ? plotTriggeredClass.plot1 : restingClass]"></b-img>
               </b-col>
               <b-col style="margin: 0 -10px">
-                <b-img v-bind:src="'data:image/png;base64,'+ plot1" fluid alt="Wind Speed/Direction Plot" style="margin: 0"></b-img>
+                <b-img v-bind:src="'data:image/png;base64,'+ plot1" alt="Wind Speed/Direction Plot" @mouseover="plotTriggered(1, true)" @mouseleave="plotTriggered(1, false)"
+                :style="[this.mouseOverTriggered ? plotTriggeredClass.plot2 : restingClass]"></b-img>
                 <!-- <img v-bind:src="'data:image/png;base64,'+ plot1" > -->
               </b-col>
               <b-col style="margin: 0 -10px">
-                <b-img v-bind:src="'data:image/png;base64,'+ plot4" fluid alt="Visibility/Humidity Plot" style="margin: 0"></b-img>
+                <b-img v-bind:src="'data:image/png;base64,'+ plot4" alt="Visibility/Humidity Plot" @mouseover="plotTriggered(2, true)" @mouseleave="plotTriggered(2, false)"
+                :style="[this.mouseOverTriggered ? plotTriggeredClass.plot3 : restingClass]"></b-img>
                 <!-- <img v-bind:src="'data:image/png;base64,'+ plot4" width="500"> -->
               </b-col>
             </b-row>
@@ -298,20 +301,18 @@
             </b-card>
     </b-card-group>
 
-      <img v-bind:src="'data:image/png;base64,'+ plot1" width="500">
+      <img v-bind:src="'data:image/png;base64,'+ plot1">
       <img v-bind:src="'data:image/png;base64,'+ plot2" width="500">
       <img v-bind:src="'data:image/png;base64,'+ plot3" width="500">
       <img v-bind:src="'data:image/png;base64,'+ plot4" width="500">
+      <b-button @click="toggleClass"> Click me</b-button>
 
   </div>
 </template>
 
 <script>
-import DatePicker from 'vue2-datepicker'
-import 'vue2-datepicker/index.css'
 import axios from 'axios'
 export default {
-  components: { DatePicker },
   data () {
     return {
       // plots:
@@ -371,7 +372,14 @@ export default {
       precipOptions: [
         'Rain', 'Snow', 'Cloudy', 'Sleet', 'Hail', 'Fog', 'Rainy', 'Dreary', 'Gloomy', 'Overcast', 'Flood'
       ],
-      imageProps: { blank: true, height: 75, width: 400, class: 'm1' }
+      imageProps: { blank: true, height: 75, width: 400, class: 'm1' },
+      restingClass: { 'width': '100%' },
+      plotTriggeredClass: {
+        plot1: {},
+        plot2: {},
+        plot3: {}
+      },
+      mouseOverTriggered: false
     }
   },
   methods: {
@@ -448,6 +456,29 @@ export default {
       }).catch(function (error) {
         console.log(error)
       })
+    },
+    plotTriggered (plotNum, onOff) {
+      // Turns plot zoom trigger off if the mouse leaves a plot and on if it enters
+      if (onOff) {
+        this.mouseOverTriggered = true
+      } else {
+        this.mouseOverTriggered = false
+      }
+
+      // Sets the plot size class based on what plot was hovered over
+      if (plotNum === 0) {
+        this.plotTriggeredClass.plot1 = {'width': '150%'}
+        this.plotTriggeredClass.plot2 = {'width': '50%', 'float': 'right'}
+        this.plotTriggeredClass.plot3 = {'width': '50%', 'float': 'right'}
+      } else if (plotNum === 1) {
+        this.plotTriggeredClass.plot1 = {'width': '50%', 'float': 'left'}
+        this.plotTriggeredClass.plot2 = {'width': '150%', 'float': 'left', 'position': 'relative', 'right': '20%'}
+        this.plotTriggeredClass.plot3 = {'width': '50%', 'float': 'right'}
+      } else {
+        this.plotTriggeredClass.plot1 = {'width': '50%', 'float': 'left'}
+        this.plotTriggeredClass.plot2 = {'width': '50%', 'float': 'left'}
+        this.plotTriggeredClass.plot3 = {'width': '150%', 'float': 'left', 'position': 'relative', 'right': '40%'}
+      }
     }
   }
 }
