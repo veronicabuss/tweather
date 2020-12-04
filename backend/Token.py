@@ -1,4 +1,3 @@
-
 def token():
     return ''
 
