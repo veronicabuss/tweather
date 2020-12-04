@@ -10,6 +10,7 @@
         header-bg-variant="primary"
         header-text-variant="white"
         align="left"
+        style="margin-left: -10px; margin-right: -10px"
       >
         <b-card-text>Use the parameters below to see how people in that area were feeling about the weather this week. {{dateRange}}</b-card-text>
         <!-- Start of init inputs -->
@@ -47,12 +48,12 @@
         </b-collapse>
 
         <!-- Weather Data goes in this card -->
-        <b-collapse id="weather-collapse" class="mt-2">
+        <b-collapse id="weather-collapse" >
           <b-card
             tag="article"
             class="weather-card"
           >
-            <b-title style="font-size:15pt">Weather in {{cityName}} according to {{station_name}}, {{station_dist}} miles away: </b-title>
+            <b-title style="font-size:15pt">Weather in {{cityName}}, {{state_name}}: </b-title>
             <!-- Headers for the plots -->
             <b-row style="margin-top: 10px">
               <b-col>
@@ -70,19 +71,24 @@
             NOTE: The blank prop takes precedence over the src prop. If you set both and later,
             set blank to false the image specified in src will then be displayed. -->
             <b-row>
-              <b-col>
-                <b-img v-bind="imageProps" blank-color="#338833" fluid alt="Weather Plot 1"></b-img>
+              <b-col style="margin: 0 -10px;">
+                <b-img v-bind:src="'data:image/png;base64,'+ plot2" alt="Temperature/Precipitation Plot" @mouseover="plotTriggered(0, true)" @mouseleave="plotTriggered(0, false)"
+                :style="[this.mouseOverTriggered ? plotTriggeredClass.plot1 : restingClass]"></b-img>
               </b-col>
-              <b-col>
-                <b-img v-bind="imageProps" blank-color="rgba(128, 255, 255, 0.5)" fluid alt="Weather Plot 2"></b-img>
+              <b-col style="margin: 0 -10px">
+                <b-img v-bind:src="'data:image/png;base64,'+ plot1" alt="Wind Speed/Direction Plot" @mouseover="plotTriggered(1, true)" @mouseleave="plotTriggered(1, false)"
+                :style="[this.mouseOverTriggered ? plotTriggeredClass.plot2 : restingClass]"></b-img>
+                <!-- <img v-bind:src="'data:image/png;base64,'+ plot1" > -->
               </b-col>
-              <b-col>
-                <b-img v-bind="imageProps" blank-color="#88f" alt="Weather Plot 3" fluid ></b-img>
+              <b-col style="margin: 0 -10px">
+                <b-img v-bind:src="'data:image/png;base64,'+ plot4" alt="Visibility/Humidity Plot" @mouseover="plotTriggered(2, true)" @mouseleave="plotTriggered(2, false)"
+                :style="[this.mouseOverTriggered ? plotTriggeredClass.plot3 : restingClass]"></b-img>
+                <!-- <img v-bind:src="'data:image/png;base64,'+ plot4" width="500"> -->
               </b-col>
             </b-row>
             <b-row>
               <b-col>
-                <h5 style="text-align:left; margin-left:">{{avg_max_temp}}°F average max, {{avg_min_temp}}°F average min</h5>
+                <h5 style="text-align:left">{{avg_max_temp}}°F average max, {{avg_min_temp}}°F average min</h5>
               </b-col>
               <b-col>
                 <h5 style="text-align:left">{{total_rain}} inches of rain, {{total_snow}} inches of snow</h5>
@@ -304,11 +310,8 @@
 </template>
 
 <script>
-import DatePicker from 'vue2-datepicker'
-import 'vue2-datepicker/index.css'
 import axios from 'axios'
 export default {
-  components: { DatePicker },
   data () {
     return {
       // plots:
@@ -317,8 +320,7 @@ export default {
       plot3: '',
       plot4: '',
       // Weather Variables to give NOAA
-      station_name: 'DTW', // null,
-      station_dist: 2, // null,
+      state_name: null,
       num_thunderous_days: 0, // null,
       max_wind: 0, // null,
       avg_temp: 55, // null,
@@ -369,17 +371,20 @@ export default {
       precipOptions: [
         'Rain', 'Snow', 'Cloudy', 'Sleet', 'Hail', 'Fog', 'Rainy', 'Dreary', 'Gloomy', 'Overcast', 'Flood'
       ],
-      imageProps: { blank: true, height: 75, width: 400, class: 'm1' }
+      imageProps: { blank: true, height: 75, width: 400, class: 'm1' },
+      restingClass: { 'width': '100%' },
+      plotTriggeredClass: {
+        plot1: {},
+        plot2: {},
+        plot3: {}
+      },
+      mouseOverTriggered: false
     }
   },
   methods: {
     useDate () {
-      // Other inits
-      this.total_precip = this.total_rain + this.total_snow
-
       // Get the date range from a week ago until yesterday - format: [[start_date], [end_date]] i.e: ["YYYY-MM-DD", "YYYY-MM-DD"]
       var todaysDate = new Date()
-      // todaysDate.setDate(todaysDate.getDate() - 1)
       todaysDate = todaysDate.toISOString().split('T')[0]
       var oneWeekAgo = new Date()
       oneWeekAgo.setDate(oneWeekAgo.getDate() - 6)
@@ -397,8 +402,17 @@ export default {
       }).then((response) => {
         console.log(response)
         this.cityName = response['data']['city']
-        // PLACEHOLDER
-        this.station_name = response['data']['state']
+        this.state_name = response['data']['state']
+        this.max_wind = response['data']['maxwind_mph']
+        this.avg_temp = response['data']['avgtemp_f']
+        this.avg_max_temp = response['data']['maxtemp_f']
+        this.avg_min_temp = response['data']['mintemp_f']
+        this.total_precip = response['data']['totalprecip_in']
+        this.total_snow = response['data']['snow_in']
+        // this.total_rain = this.total_precip = this.total_snow
+        // this.avg_wind = response['data']['avg_wind_speed']
+        // this.avg_humidity = response['data']['avghumidity']
+        // this.avg_cloud_cover = response['data']['avg_cloud_cover_percent']
         // IMAGES
         this.plot1 = response['data']['plots'][0]
         this.plot2 = response['data']['plots'][1]
@@ -441,6 +455,29 @@ export default {
       }).catch(function (error) {
         console.log(error)
       })
+    },
+    plotTriggered (plotNum, onOff) {
+      // Turns plot zoom trigger off if the mouse leaves a plot and on if it enters
+      if (onOff) {
+        this.mouseOverTriggered = true
+      } else {
+        this.mouseOverTriggered = false
+      }
+
+      // Sets the plot size class based on what plot was hovered over
+      if (plotNum === 0) {
+        this.plotTriggeredClass.plot1 = {'width': '150%'}
+        this.plotTriggeredClass.plot2 = {'width': '50%', 'float': 'right'}
+        this.plotTriggeredClass.plot3 = {'width': '50%', 'float': 'right'}
+      } else if (plotNum === 1) {
+        this.plotTriggeredClass.plot1 = {'width': '50%', 'float': 'left'}
+        this.plotTriggeredClass.plot2 = {'width': '150%', 'float': 'left', 'position': 'relative', 'right': '20%'}
+        this.plotTriggeredClass.plot3 = {'width': '50%', 'float': 'right'}
+      } else {
+        this.plotTriggeredClass.plot1 = {'width': '50%', 'float': 'left'}
+        this.plotTriggeredClass.plot2 = {'width': '50%', 'float': 'left'}
+        this.plotTriggeredClass.plot3 = {'width': '150%', 'float': 'left', 'position': 'relative', 'right': '40%'}
+      }
     }
   }
 }
@@ -471,9 +508,6 @@ label{
 }
 .coordinate-circle-wrapper{
   margin-bottom: 10px;
-}
-.or-label{
-  margin: 10px 45px;
 }
 .space{
   margin-bottom: 25px;
