@@ -44,7 +44,7 @@ def parse_data(data):
     week['avghumidity'] = total_humidity/num_days
     week['avg_wind_speed'] = total_wind_speed/num_days
     week['snow_in'] = total_snow/num_days
-    week['avg_precip'] = total_precip/num_days
+    week['total_precip'] = total_precip
     week['avgtemp_f'] = total_temp/num_days
     week['maxtemp_f'] = maxtemp_f
     week['mintemp_f'] = mintemp_f
