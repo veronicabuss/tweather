@@ -556,8 +556,8 @@ export default {
         this.avg_temp = response['data']['week']['avgtemp_f'].toFixed(1)
         this.max_temp = response['data']['week']['maxtemp_f']
         this.min_temp = response['data']['week']['mintemp_f']
-        // this.total_precip = response['data']['week']['totalprecip_in'].toFixed(1)
-        this.total_precip = response['data']['week']['total_precip'].toFixed(2)
+        this.total_precip = response['data']['week']['avg_precip'].toFixed(1)
+        // this.total_precip = response['data']['week']['total_precip'].toFixed(2)
         this.total_snow = response['data']['week']['snow_in'].toFixed(2)
         this.total_rain = (this.total_precip - this.total_snow).toFixed(2)
         this.avg_wind = response['data']['week']['avg_wind_speed']
@@ -604,17 +604,21 @@ export default {
           'Content-Type': 'application/json'
         }
       }).then((response) => {
-        this.twitterResults[dayNum].avg_sentiment = response['data'][dayStg]['average_sentiment'].toFixed(2)
-        this.twitterResults[dayNum].max_sentiment = response['data'][dayStg]['max_sentiment']
-        this.twitterResults[dayNum].min_sentiment = response['data'][dayStg]['min_sentiment']
-        this.twitterResults[dayNum].num_tweets = response['data'][dayStg]['number_of_tweets']
-        // Add decimal places
-        this.twitterResults[dayNum].max_sentiment[0] = this.twitterResults[dayNum].max_sentiment[0].toFixed(3)
-        this.twitterResults[dayNum].min_sentiment[0] = this.twitterResults[dayNum].min_sentiment[0].toFixed(3)
-        console.log(this.twitterResults[dayNum])
-        // Re-renders the page with new updates
-        this.$forceUpdate()
-      }).catch(function (error) {
+        if(response) {
+          this.twitterResults[dayNum].avg_sentiment = response['data'][dayStg]['average_sentiment'].toFixed(2)
+          this.twitterResults[dayNum].max_sentiment = response['data'][dayStg]['max_sentiment']
+          this.twitterResults[dayNum].min_sentiment = response['data'][dayStg]['min_sentiment']
+          this.twitterResults[dayNum].num_tweets = response['data'][dayStg]['number_of_tweets']
+          // Add decimal places
+          this.twitterResults[dayNum].max_sentiment[0] = this.twitterResults[dayNum].max_sentiment[0].toFixed(3)
+          this.twitterResults[dayNum].min_sentiment[0] = this.twitterResults[dayNum].min_sentiment[0].toFixed(3)
+          console.log(this.twitterResults[dayNum])
+          // Re-renders the page with new updates
+          this.$forceUpdate()
+        }
+      }).catch( (error) => {
+        var msg = 'Either something went wrong or there are no tweets for ' + dayStg + ' :(. Try fewer or different keywords'
+        this.makeToast(msg, 'danger', 'Failed to Pull Relevant Tweets')
         console.log(error)
       })
     },
@@ -709,9 +713,9 @@ export default {
       this.makeToast('Cleared the keywords', 'warning')
     },
     // Little dismissisable notification message
-    makeToast (message, variant = 'success') {
+    makeToast (message, variant = 'success', title = 'Success') {
       this.$bvToast.toast(message, {
-        title: 'Success',
+        title: title,
         toaster: 'b-toaster-top-left',
         variant: variant,
         solid: true
