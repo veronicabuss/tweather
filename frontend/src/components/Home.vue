@@ -26,8 +26,7 @@
           ></b-form-select>
 
           <!-- Submit Button -->
-          <b-button @click="useDate" variant="primary" style="margin-left: 10px" v-b-toggle.weather-collapse>Let's Go</b-button>
-          <!-- <b-button @click="useDate" variant="primary" style="margin-left: 10px">Let's Go</b-button> -->
+          <b-button @click="useDate" variant="primary" style="margin-left: 10px">Let's Go</b-button>
         </b-form>
 
         <b-button variant="outline-primary" v-b-toggle.coordinates-collapse style="margin: 20px">Enter Coordinates Manually</b-button>
@@ -47,8 +46,12 @@
           </b-form>
         </b-collapse>
 
-        <!-- Weather Data goes in this card -->
-        <b-collapse id="weather-collapse" >
+        <!-- Spinner for indicating loading -->
+        <div style="text-align: center">
+          <b-spinner variant="primary" v-if="weatherCardLoading" style="width: 3rem; height: 3rem;"></b-spinner>
+        </div>
+        <!-- Weather Data card -->
+        <b-collapse v-model="weatherCardDoneLoading" >
           <b-card
             tag="article"
             class="weather-card"
@@ -100,214 +103,223 @@
         </b-collapse>
 
         <!-- Select Keywords card -->
-        <b-card>
-          <!-- Date Header Row -->
-          <b-row class="header-row">
-            <b-col class="header" id="date-header-1">
-              <h3>{{ this.daysInRange[0][0]}}</h3>
-            </b-col>
-            <b-col class="header" id="date-header-2">
-              <h3>{{ this.daysInRange[1][0]}}</h3>
-            </b-col>
-            <b-col class="header" id="date-header-3">
-              <h3>{{ this.daysInRange[2][0]}}</h3>
-            </b-col>
-            <b-col class="header" id="date-header-4">
-              <h3>{{ this.daysInRange[3][0]}}</h3>
-            </b-col>
-            <b-col class="header" id="date-header-5">
-              <h3>{{ this.daysInRange[4][0]}}</h3>
-            </b-col>
-            <b-col class="header" id="date-header-6">
-              <h3>{{ this.daysInRange[5][0]}}</h3>
-            </b-col>
-            <b-col class="header" id="date-header-7">
-              <h3>{{ this.daysInRange[6][0]}}</h3>
-            </b-col>
-          </b-row>
-          <!-- Keywords Row -->
-          <b-row class="keywords-row">
-            <!-- Day 1 Keywords -->
-            <b-col class="keywords-col" id="keywords-day-1">
-              <b-button variant="warning" class="expand-collapse-button" @click="expandOrCollapse('day1')">{{collapses.day1.text}}</b-button>
-              <p>Enter Keywords:</p>
-              <!-- Cold Keywords Dropdown Button -->
-              <b-button variant="outline-info" @click="toggleAndUpdate('day1', 'cold')" class="button-dropdown">Cold <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day1.cold">
-                <b-form-checkbox-group v-model="keywords.day1.cold" id="day1-cold-checkboxes" :options="coldOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <br>
-              <!-- Warm Keywords Dropdown Button -->
-              <b-button variant="outline-warning" @click="toggleAndUpdate('day1', 'warm')" class="button-dropdown">Warm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day1.warm">
-                <b-form-checkbox-group v-model="keywords.day1.warm" id="day1-warm-checkboxes" :options="warmOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <br>
-              <!-- Storm Keywords Dropdown Button -->
-              <b-button variant="outline-secondary" @click="toggleAndUpdate('day1', 'storm')" class="button-dropdown">Storm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse id="day1-storm-collapse" v-model="collapses.day1.storm">
-                <b-form-checkbox-group v-model="keywords.day1.storm" id="day1-storm-checkboxes" :options="stormOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <br>
-              <!-- Precipitation Keywords Dropdown Button -->
-              <b-button variant="outline-primary" @click="toggleAndUpdate('day1', 'precip')" class="button-dropdown">Precipitation <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse id="day1-precip-collapse" v-model="collapses.day1.precip">
-                <b-form-checkbox-group v-model="keywords.day1.precip" id="day1-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <b-button variant="info" @click="saveKeywords('day1', daysInRange[0][1])" style="margin: 10px 0; width: 80%">Save</b-button>
-            </b-col>
-            <!-- Day 2 Keywords -->
-            <b-col class="keywords-col" id="keywords-day-2">
-              <b-button variant="warning" class="expand-collapse-button" @click="expandOrCollapse('day2')">{{collapses.day2.text}}</b-button>
-              <p>Enter Keywords:</p>
-              <b-button variant="outline-info" @click="toggleAndUpdate('day2', 'cold')" class="button-dropdown">Cold <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day2.cold">
-                <b-form-checkbox-group v-model="keywords.day2.cold" id="day2-cold-checkboxes" :options="coldOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <br>
-              <b-button variant="outline-warning" @click="toggleAndUpdate('day2', 'warm')" class="button-dropdown">Warm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day2.warm">
-                <b-form-checkbox-group v-model="keywords.day2.warm" id="day2-warm-checkboxes" :options="warmOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <br>
-              <b-button variant="outline-secondary" @click="toggleAndUpdate('day2', 'storm')" class="button-dropdown">Storm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day2.storm">
-                <b-form-checkbox-group v-model="keywords.day2.storm" id="day2-storm-checkboxes" :options="stormOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <br>
-              <b-button variant="outline-primary" @click="toggleAndUpdate('day2', 'precip')" class="button-dropdown">Precipitation <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day2.precip">
-                <b-form-checkbox-group v-model="keywords.day2.precip" id="day2-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <b-button variant="info" @click="saveKeywords('day2', daysInRange[1][1])" style="margin: 10px 0; width: 80%">Save</b-button>
-            </b-col>
-            <!-- Day 3 Keywords -->
-            <b-col class="keywords-col" id="keywords-day-3">
-              <b-button variant="warning" class="expand-collapse-button" @click="expandOrCollapse('day3')">{{collapses.day3.text}}</b-button>
-              <p>Enter Keywords:</p>
-              <b-button variant="outline-info" @click="toggleAndUpdate('day3', 'cold')" class="button-dropdown">Cold <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day3.cold">
-                <b-form-checkbox-group v-model="keywords.day3.cold" id="day3-cold-checkboxes" :options="coldOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <br>
-              <b-button variant="outline-warning" @click="toggleAndUpdate('day3', 'warm')" class="button-dropdown">Warm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day3.warm">
-                <b-form-checkbox-group v-model="keywords.day3.warm" id="day3-warm-checkboxes" :options="warmOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <br>
-              <b-button variant="outline-secondary" @click="toggleAndUpdate('day3', 'storm')" class="button-dropdown">Storm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day3.storm">
-                <b-form-checkbox-group v-model="keywords.day3.storm" id="day3-storm-checkboxes" :options="stormOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <br>
-              <b-button variant="outline-primary" @click="toggleAndUpdate('day3', 'precip')" class="button-dropdown">Precipitation <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day3.precip">
-                <b-form-checkbox-group v-model="keywords.day3.precip" id="day3-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <b-button variant="info" @click="saveKeywords('day3', daysInRange[2][1])" style="margin: 10px 0; width: 80%">Save</b-button>
-            </b-col>
-            <!-- Day 4 Keywords -->
-            <b-col class="keywords-col" id="keywords-day-4">
-              <b-button variant="warning" class="expand-collapse-button" @click="expandOrCollapse('day4')">{{collapses.day4.text}}</b-button>
-              <p>Enter Keywords:</p>
-              <b-button variant="outline-info" @click="toggleAndUpdate('day4', 'cold')" class="button-dropdown">Cold <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day4.cold">
-                <b-form-checkbox-group v-model="keywords.day4.cold" id="day4-cold-checkboxes" :options="coldOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <br>
-              <b-button variant="outline-warning" @click="toggleAndUpdate('day4', 'warm')" class="button-dropdown">Warm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day4.warm">
-                <b-form-checkbox-group v-model="keywords.day4.warm" id="day4-warm-checkboxes" :options="warmOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <br>
-              <b-button variant="outline-secondary" @click="toggleAndUpdate('day4', 'storm')" class="button-dropdown">Storm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day4.storm">
-                <b-form-checkbox-group v-model="keywords.day4.storm" id="day4-storm-checkboxes" :options="stormOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <br>
-              <b-button variant="outline-primary" @click="toggleAndUpdate('day4', 'precip')" class="button-dropdown">Precipitation <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day4.precip">
-                <b-form-checkbox-group v-model="keywords.day4.precip" id="day4-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <b-button variant="info" @click="saveKeywords('day4', daysInRange[3][1])" style="margin: 10px 0; width: 80%">Save</b-button>
-            </b-col>
-            <!-- Day 5 Keywords -->
-            <b-col class="keywords-col" id="keywords-day-5">
-              <b-button variant="warning" class="expand-collapse-button" @click="expandOrCollapse('day5')">{{collapses.day5.text}}</b-button>
-              <p>Enter Keywords:</p>
-              <b-button variant="outline-info" @click="toggleAndUpdate('day5', 'cold')" class="button-dropdown">Cold <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day5.cold">
-                <b-form-checkbox-group v-model="keywords.day5.cold" id="day5-cold-checkboxes" :options="coldOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <br>
-              <b-button variant="outline-warning" @click="toggleAndUpdate('day5', 'warm')" class="button-dropdown">Warm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day5.warm">
-                <b-form-checkbox-group v-model="keywords.day5.warm" id="day5-warm-checkboxes" :options="warmOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <br>
-              <b-button variant="outline-secondary" @click="toggleAndUpdate('day5', 'storm')" class="button-dropdown">Storm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day5.storm">
-                <b-form-checkbox-group v-model="keywords.day5.storm" id="day5-storm-checkboxes" :options="stormOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <br>
-              <b-button variant="outline-primary" @click="toggleAndUpdate('day5', 'precip')" class="button-dropdown">Precipitation <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day5.precip">
-                <b-form-checkbox-group v-model="keywords.day5.precip" id="day5-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <b-button variant="info" @click="saveKeywords('day5', daysInRange[4][1])" style="margin: 10px 0; width: 80%">Save</b-button>
-            </b-col>
-            <!-- Day 6 Keywords -->
-            <b-col class="keywords-col" id="keywords-day-6">
-              <b-button variant="warning" class="expand-collapse-button" @click="expandOrCollapse('day6')">{{collapses.day6.text}}</b-button>
-              <p>Enter Keywords:</p>
-              <b-button variant="outline-info" @click="toggleAndUpdate('day6', 'cold')" class="button-dropdown">Cold <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day6.cold">
-                <b-form-checkbox-group v-model="keywords.day6.cold" id="day6-cold-checkboxes" :options="coldOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <br>
-              <b-button variant="outline-warning" @click="toggleAndUpdate('day6', 'warm')" class="button-dropdown">Warm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day6.warm">
-                <b-form-checkbox-group v-model="keywords.day6.warm" id="day6-warm-checkboxes" :options="warmOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <br>
-              <b-button variant="outline-secondary" @click="toggleAndUpdate('day6', 'storm')" class="button-dropdown">Storm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day6.storm">
-                <b-form-checkbox-group v-model="keywords.day6.storm" id="day6-storm-checkboxes" :options="stormOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <br>
-              <b-button variant="outline-primary" @click="toggleAndUpdate('day6', 'precip')" class="button-dropdown">Precipitation <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day6.precip">
-                <b-form-checkbox-group v-model="keywords.day6.precip" id="day6-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <b-button variant="info" @click="saveKeywords('day6', daysInRange[5][1])" style="margin: 10px 0; width: 80%">Save</b-button>
-            </b-col>
-            <!-- Day 7 Keywords -->
-            <b-col class="keywords-col" id="keywords-day-7">
-              <b-button variant="warning" class="expand-collapse-button" @click="expandOrCollapse('day7')">{{collapses.day7.text}}</b-button>
-              <p>Enter Keywords:</p>
-              <b-button variant="outline-info" @click="toggleAndUpdate('day7', 'cold')" class="button-dropdown">Cold <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day7.cold">
-                <b-form-checkbox-group v-model="keywords.day7.cold" id="day7-cold-checkboxes" :options="coldOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <br>
-              <b-button variant="outline-warning" @click="toggleAndUpdate('day7', 'warm')" class="button-dropdown">Warm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day7.warm">
-                <b-form-checkbox-group v-model="keywords.day7.warm" id="day7-warm-checkboxes" :options="warmOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <br>
-              <b-button variant="outline-secondary" @click="toggleAndUpdate('day7', 'storm')" class="button-dropdown">Storm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day7.precip">
-                <b-form-checkbox-group v-model="keywords.day7.storm" id="day7-storm-checkboxes" :options="stormOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <br>
-              <b-button variant="outline-primary" @click="toggleAndUpdate('day7', 'precip')" class="button-dropdown">Precipitation <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-              <b-collapse v-model="collapses.day7.cold">
-                <b-form-checkbox-group v-model="keywords.day7.precip" id="day7-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
-              </b-collapse>
-              <b-button variant="info" @click="saveKeywords('day7', daysInRange[6][1])" style="margin: 10px 0; width: 80%">Save</b-button>
-            </b-col>
-          </b-row>
-        </b-card>
+        <b-collapse v-model="weatherCardDoneLoading">
+          <b-card>
+            <!-- Date Header Row -->
+            <b-row class="header-row">
+              <b-col class="header" id="date-header-1">
+                <h3>{{ this.daysInRange[0][0]}}</h3>
+              </b-col>
+              <b-col class="header" id="date-header-2">
+                <h3>{{ this.daysInRange[1][0]}}</h3>
+              </b-col>
+              <b-col class="header" id="date-header-3">
+                <h3>{{ this.daysInRange[2][0]}}</h3>
+              </b-col>
+              <b-col class="header" id="date-header-4">
+                <h3>{{ this.daysInRange[3][0]}}</h3>
+              </b-col>
+              <b-col class="header" id="date-header-5">
+                <h3>{{ this.daysInRange[4][0]}}</h3>
+              </b-col>
+              <b-col class="header" id="date-header-6">
+                <h3>{{ this.daysInRange[5][0]}}</h3>
+              </b-col>
+              <b-col class="header" id="date-header-7">
+                <h3>{{ this.daysInRange[6][0]}}</h3>
+              </b-col>
+            </b-row>
+            <!-- Keywords Row -->
+            <b-row class="keywords-row">
+              <!-- Day 1 Keywords -->
+              <b-col class="keywords-col" id="keywords-day-1">
+                <b-button variant="warning" class="expand-collapse-button" @click="expandOrCollapse('day1')">{{collapses.day1.text}}</b-button>
+                <p>Enter Keywords:</p>
+                <!-- Cold Keywords Dropdown Button -->
+                <b-button variant="outline-info" @click="toggleAndUpdate('day1', 'cold')" class="button-dropdown">Cold <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day1.cold">
+                  <b-form-checkbox-group v-model="keywords.day1.cold" id="day1-cold-checkboxes" :options="coldOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <br>
+                <!-- Warm Keywords Dropdown Button -->
+                <b-button variant="outline-warning" @click="toggleAndUpdate('day1', 'warm')" class="button-dropdown">Warm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day1.warm">
+                  <b-form-checkbox-group v-model="keywords.day1.warm" id="day1-warm-checkboxes" :options="warmOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <br>
+                <!-- Storm Keywords Dropdown Button -->
+                <b-button variant="outline-dark" @click="toggleAndUpdate('day1', 'storm')" class="button-dropdown">Storm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse id="day1-storm-collapse" v-model="collapses.day1.storm">
+                  <b-form-checkbox-group v-model="keywords.day1.storm" id="day1-storm-checkboxes" :options="stormOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <br>
+                <!-- Precipitation Keywords Dropdown Button -->
+                <b-button variant="outline-primary" @click="toggleAndUpdate('day1', 'precip')" class="button-dropdown">Precipitation <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse id="day1-precip-collapse" v-model="collapses.day1.precip">
+                  <b-form-checkbox-group v-model="keywords.day1.precip" id="day1-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
+                </b-collapse>
+
+                <!-- Save and Apply to All buttons -->
+                <b-button variant="info" @click="saveKeywords('day1', daysInRange[0][1])" style="margin: 10px 5px; width: 80%">Save</b-button>
+                <b-button variant="secondary" @click="applyToAll" style="width: 90%; margin-bottom: 10px">Apply to All</b-button>
+              </b-col>
+              <!-- Day 2 Keywords -->
+              <b-col class="keywords-col" id="keywords-day-2">
+                <b-button variant="warning" class="expand-collapse-button" @click="expandOrCollapse('day2')">{{collapses.day2.text}}</b-button>
+                <p>Enter Keywords:</p>
+                <b-button variant="outline-info" @click="toggleAndUpdate('day2', 'cold')" class="button-dropdown">Cold <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day2.cold">
+                  <b-form-checkbox-group v-model="keywords.day2.cold" id="day2-cold-checkboxes" :options="coldOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <br>
+                <b-button variant="outline-warning" @click="toggleAndUpdate('day2', 'warm')" class="button-dropdown">Warm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day2.warm">
+                  <b-form-checkbox-group v-model="keywords.day2.warm" id="day2-warm-checkboxes" :options="warmOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <br>
+                <b-button variant="outline-dark" @click="toggleAndUpdate('day2', 'storm')" class="button-dropdown">Storm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day2.storm">
+                  <b-form-checkbox-group v-model="keywords.day2.storm" id="day2-storm-checkboxes" :options="stormOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <br>
+                <b-button variant="outline-primary" @click="toggleAndUpdate('day2', 'precip')" class="button-dropdown">Precipitation <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day2.precip">
+                  <b-form-checkbox-group v-model="keywords.day2.precip" id="day2-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <b-button variant="info" @click="saveKeywords('day2', daysInRange[1][1])" style="margin: 10px 0; width: 80%">Save</b-button>
+              </b-col>
+              <!-- Day 3 Keywords -->
+              <b-col class="keywords-col" id="keywords-day-3">
+                <b-button variant="warning" class="expand-collapse-button" @click="expandOrCollapse('day3')">{{collapses.day3.text}}</b-button>
+                <p>Enter Keywords:</p>
+                <b-button variant="outline-info" @click="toggleAndUpdate('day3', 'cold')" class="button-dropdown">Cold <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day3.cold">
+                  <b-form-checkbox-group v-model="keywords.day3.cold" id="day3-cold-checkboxes" :options="coldOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <br>
+                <b-button variant="outline-warning" @click="toggleAndUpdate('day3', 'warm')" class="button-dropdown">Warm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day3.warm">
+                  <b-form-checkbox-group v-model="keywords.day3.warm" id="day3-warm-checkboxes" :options="warmOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <br>
+                <b-button variant="outline-dark" @click="toggleAndUpdate('day3', 'storm')" class="button-dropdown">Storm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day3.storm">
+                  <b-form-checkbox-group v-model="keywords.day3.storm" id="day3-storm-checkboxes" :options="stormOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <br>
+                <b-button variant="outline-primary" @click="toggleAndUpdate('day3', 'precip')" class="button-dropdown">Precipitation <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day3.precip">
+                  <b-form-checkbox-group v-model="keywords.day3.precip" id="day3-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <b-button variant="info" @click="saveKeywords('day3', daysInRange[2][1])" style="margin: 10px 0; width: 80%">Save</b-button>
+              </b-col>
+              <!-- Day 4 Keywords -->
+              <b-col class="keywords-col" id="keywords-day-4">
+                <b-button variant="warning" class="expand-collapse-button" @click="expandOrCollapse('day4')">{{collapses.day4.text}}</b-button>
+                <p>Enter Keywords:</p>
+                <b-button variant="outline-info" @click="toggleAndUpdate('day4', 'cold')" class="button-dropdown">Cold <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day4.cold">
+                  <b-form-checkbox-group v-model="keywords.day4.cold" id="day4-cold-checkboxes" :options="coldOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <br>
+                <b-button variant="outline-warning" @click="toggleAndUpdate('day4', 'warm')" class="button-dropdown">Warm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day4.warm">
+                  <b-form-checkbox-group v-model="keywords.day4.warm" id="day4-warm-checkboxes" :options="warmOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <br>
+                <b-button variant="outline-dark" @click="toggleAndUpdate('day4', 'storm')" class="button-dropdown">Storm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day4.storm">
+                  <b-form-checkbox-group v-model="keywords.day4.storm" id="day4-storm-checkboxes" :options="stormOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <br>
+                <b-button variant="outline-primary" @click="toggleAndUpdate('day4', 'precip')" class="button-dropdown">Precipitation <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day4.precip">
+                  <b-form-checkbox-group v-model="keywords.day4.precip" id="day4-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <b-button variant="info" @click="saveKeywords('day4', daysInRange[3][1])" style="margin: 10px 0; width: 80%">Save</b-button>
+              </b-col>
+              <!-- Day 5 Keywords -->
+              <b-col class="keywords-col" id="keywords-day-5">
+                <b-button variant="warning" class="expand-collapse-button" @click="expandOrCollapse('day5')">{{collapses.day5.text}}</b-button>
+                <p>Enter Keywords:</p>
+                <b-button variant="outline-info" @click="toggleAndUpdate('day5', 'cold')" class="button-dropdown">Cold <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day5.cold">
+                  <b-form-checkbox-group v-model="keywords.day5.cold" id="day5-cold-checkboxes" :options="coldOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <br>
+                <b-button variant="outline-warning" @click="toggleAndUpdate('day5', 'warm')" class="button-dropdown">Warm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day5.warm">
+                  <b-form-checkbox-group v-model="keywords.day5.warm" id="day5-warm-checkboxes" :options="warmOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <br>
+                <b-button variant="outline-dark" @click="toggleAndUpdate('day5', 'storm')" class="button-dropdown">Storm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day5.storm">
+                  <b-form-checkbox-group v-model="keywords.day5.storm" id="day5-storm-checkboxes" :options="stormOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <br>
+                <b-button variant="outline-primary" @click="toggleAndUpdate('day5', 'precip')" class="button-dropdown">Precipitation <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day5.precip">
+                  <b-form-checkbox-group v-model="keywords.day5.precip" id="day5-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <b-button variant="info" @click="saveKeywords('day5', daysInRange[4][1])" style="margin: 10px 0; width: 80%">Save</b-button>
+              </b-col>
+              <!-- Day 6 Keywords -->
+              <b-col class="keywords-col" id="keywords-day-6">
+                <b-button variant="warning" class="expand-collapse-button" @click="expandOrCollapse('day6')">{{collapses.day6.text}}</b-button>
+                <p>Enter Keywords:</p>
+                <b-button variant="outline-info" @click="toggleAndUpdate('day6', 'cold')" class="button-dropdown">Cold <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day6.cold">
+                  <b-form-checkbox-group v-model="keywords.day6.cold" id="day6-cold-checkboxes" :options="coldOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <br>
+                <b-button variant="outline-warning" @click="toggleAndUpdate('day6', 'warm')" class="button-dropdown">Warm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day6.warm">
+                  <b-form-checkbox-group v-model="keywords.day6.warm" id="day6-warm-checkboxes" :options="warmOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <br>
+                <b-button variant="outline-dark" @click="toggleAndUpdate('day6', 'storm')" class="button-dropdown">Storm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day6.storm">
+                  <b-form-checkbox-group v-model="keywords.day6.storm" id="day6-storm-checkboxes" :options="stormOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <br>
+                <b-button variant="outline-primary" @click="toggleAndUpdate('day6', 'precip')" class="button-dropdown">Precipitation <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day6.precip">
+                  <b-form-checkbox-group v-model="keywords.day6.precip" id="day6-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <b-button variant="info" @click="saveKeywords('day6', daysInRange[5][1])" style="margin: 10px 0; width: 80%">Save</b-button>
+              </b-col>
+              <!-- Day 7 Keywords -->
+              <b-col class="keywords-col" id="keywords-day-7">
+                <b-button variant="warning" class="expand-collapse-button" @click="expandOrCollapse('day7')">{{collapses.day7.text}}</b-button>
+                <p>Enter Keywords:</p>
+                <b-button variant="outline-info" @click="toggleAndUpdate('day7', 'cold')" class="button-dropdown">Cold <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day7.cold">
+                  <b-form-checkbox-group v-model="keywords.day7.cold" id="day7-cold-checkboxes" :options="coldOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <br>
+                <b-button variant="outline-warning" @click="toggleAndUpdate('day7', 'warm')" class="button-dropdown">Warm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day7.warm">
+                  <b-form-checkbox-group v-model="keywords.day7.warm" id="day7-warm-checkboxes" :options="warmOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <br>
+                <b-button variant="outline-dark" @click="toggleAndUpdate('day7', 'storm')" class="button-dropdown">Storm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day7.precip">
+                  <b-form-checkbox-group v-model="keywords.day7.storm" id="day7-storm-checkboxes" :options="stormOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <br>
+                <b-button variant="outline-primary" @click="toggleAndUpdate('day7', 'precip')" class="button-dropdown">Precipitation <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
+                <b-collapse v-model="collapses.day7.cold">
+                  <b-form-checkbox-group v-model="keywords.day7.precip" id="day7-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
+                </b-collapse>
+                <b-button variant="info" @click="saveKeywords('day7', daysInRange[6][1])" style="margin: 10px 0; width: 80%">Save</b-button>
+              </b-col>
+            </b-row>
+
+            <!-- Save and Clear all buttons -->
+            <b-button variant="outline-success" @click="saveAll" style="margin: 15px 5%; width: 90%; text-align: center">Save All</b-button>
+            <b-button variant="outline-danger" @click="clearAll" style="margin: 0 5%; width: 90%; text-align: center">Clear All</b-button>
+          </b-card>
+        </b-collapse>
 
       </b-card>
     </b-card-group>
@@ -346,7 +358,7 @@ export default {
 
     // Get the date range from a week ago until yesterday - format: [[start_date], [end_date]] i.e: ["YYYY-MM-DD", "YYYY-MM-DD"]
     var todaysDate = new Date()
-    todaysDate.setDate(todaysDate.getDate() - 1)
+    todaysDate.setDate(todaysDate.getDate() - 1) // Iso String makes you subtract one for today's date
     todaysDate = todaysDate.toISOString().split('T')[0]
     var oneWeekAgo = new Date()
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
@@ -354,7 +366,7 @@ export default {
     const datesRange = [oneWeekAgo.toString(), todaysDate.toString()]
     this.dateRange = datesRange
 
-    // Get the strings for each date
+    // Get the strings for each date - "aDate" and "bDate" because ISO string and normal strings set them as different dates
     var allDays = []
     for (i = 6; i >= 0; i--) {
       var aDate = new Date()
@@ -425,12 +437,17 @@ export default {
         plot2: {},
         plot3: {}
       },
-      mouseOverTriggered: false
+      mouseOverTriggered: false,
+      weatherCardLoading: false,
+      weatherCardDoneLoading: false
     }
   },
   methods: {
     useDate () {
       // Push the date range to the backend
+      this.weatherCardLoading = true
+      // Re-renders the page with new updates
+      this.$forceUpdate()
       const path = 'http://localhost:5000/api/request'
       const json = JSON.stringify({latitude: this.latitude, longitude: this.longitude, date: this.dateRange})
       axios.post(path, json, {
@@ -457,12 +474,18 @@ export default {
         this.plot2 = response['data']['plots'][1]
         this.plot3 = response['data']['plots'][2]
         this.plot4 = response['data']['plots'][3]
+        // Disable spinner and enable cards
+        this.weatherCardLoading = false
+        this.weatherCardDoneLoading = true
       }).catch(function (error) {
+        // Disable spinner
+        this.weatherCardLoading = false
         console.log(error)
       })
     },
     // On select of a city, updates the manual select buttons with prepopulated data
     processCity () {
+      this.weatherCardDoneLoading = false
       var parsedCityData = this.cityData.split(',')
       if (parsedCityData.length === 5) {
         this.cityName = parsedCityData[0]
@@ -538,6 +561,49 @@ export default {
       this.collapses[dayNum][el] = !this.collapses[dayNum][el]
       // Re-renders the page with new updates
       this.$forceUpdate()
+    },
+    applyToAll () {
+      // Applies the day1 selected keywords to all of the checkboxes
+      for (var i = 1; i < 7; i++) {
+        var dayNum = 'day' + (i + 1).toString()
+        Object.assign(this.keywords[dayNum], this.keywords['day1'])
+      }
+      // Re-renders the page with new updates
+      this.$forceUpdate()
+      // Success message
+      this.makeToast('Applied keywords to all the days')
+    },
+    // Saves all the keywords in the range
+    saveAll () {
+      for (var i = 0; i < this.daysInRange.length; i++) {
+        var dayNum = 'day' + (i + 1).toString()
+        this.saveKeywords(dayNum, this.daysInRange[i][1])
+      }
+    },
+    // Clears all the keywords
+    clearAll () {
+      for (var i = 0; i < 7; i++) {
+        var dayNum = 'day' + (i + 1).toString()
+        this.keywords[dayNum] = {
+          cold: [],
+          warm: [],
+          storm: [],
+          precip: []
+        }
+      }
+      // Re-renders the page with new updates
+      this.$forceUpdate()
+      // Success message
+      this.makeToast('Cleared the keywords', 'warning')
+    },
+    // Little dismissisable notification message
+    makeToast (message, variant = 'success') {
+      this.$bvToast.toast(message, {
+        title: 'Success',
+        toaster: 'b-toaster-top-left',
+        variant: variant,
+        solid: true
+      })
     }
   }
 }
