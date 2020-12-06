@@ -108,25 +108,25 @@
             <!-- Date Header Row -->
             <b-row class="header-row">
               <b-col class="header" id="date-header-1">
-                <h3>{{ this.daysInRange[0][0]}}</h3>
+                <h4>{{ this.daysInRange[0][0]}}</h4>
               </b-col>
               <b-col class="header" id="date-header-2">
-                <h3>{{ this.daysInRange[1][0]}}</h3>
+                <h4>{{ this.daysInRange[1][0]}}</h4>
               </b-col>
               <b-col class="header" id="date-header-3">
-                <h3>{{ this.daysInRange[2][0]}}</h3>
+                <h4>{{ this.daysInRange[2][0]}}</h4>
               </b-col>
               <b-col class="header" id="date-header-4">
-                <h3>{{ this.daysInRange[3][0]}}</h3>
+                <h4>{{ this.daysInRange[3][0]}}</h4>
               </b-col>
               <b-col class="header" id="date-header-5">
-                <h3>{{ this.daysInRange[4][0]}}</h3>
+                <h4>{{ this.daysInRange[4][0]}}</h4>
               </b-col>
               <b-col class="header" id="date-header-6">
-                <h3>{{ this.daysInRange[5][0]}}</h3>
+                <h4>{{ this.daysInRange[5][0]}}</h4>
               </b-col>
               <b-col class="header" id="date-header-7">
-                <h3>{{ this.daysInRange[6][0]}}</h3>
+                <h4>{{ this.daysInRange[6][0]}}</h4>
               </b-col>
             </b-row>
             <!-- Keywords Row -->
@@ -316,8 +316,92 @@
             </b-row>
 
             <!-- Save and Clear all buttons -->
-            <b-button variant="outline-success" @click="saveAll" style="margin: 15px 5%; width: 90%; text-align: center">Save All</b-button>
-            <b-button variant="outline-danger" @click="clearAll" style="margin: 0 5%; width: 90%; text-align: center">Clear All</b-button>
+            <b-button-group style="width: 100%; margin-top: 10px">
+              <b-button variant="outline-success" style="width: 50%" @click="saveAll" >Save All</b-button>
+              <b-button variant="outline-danger" style="width: 50%" @click="clearAll" >Clear All</b-button>
+            </b-button-group>
+          </b-card>
+        </b-collapse>
+
+        <!-- Twitter Output card -->
+        <b-collapse v-model="weatherCardDoneLoading">
+          <b-card>
+            <!-- Date Header Row -->
+            <b-row class="header-row">
+              <b-col class="header" id="date-header-1">
+                <h4>{{ this.daysInRange[0][0]}}</h4>
+              </b-col>
+              <b-col class="header" id="date-header-2">
+                <h4>{{ this.daysInRange[1][0]}}</h4>
+              </b-col>
+              <b-col class="header" id="date-header-3">
+                <h4>{{ this.daysInRange[2][0]}}</h4>
+              </b-col>
+              <b-col class="header" id="date-header-4">
+                <h4>{{ this.daysInRange[3][0]}}</h4>
+              </b-col>
+              <b-col class="header" id="date-header-5">
+                <h4>{{ this.daysInRange[4][0]}}</h4>
+              </b-col>
+              <b-col class="header" id="date-header-6">
+                <h4>{{ this.daysInRange[5][0]}}</h4>
+              </b-col>
+              <b-col class="header" id="date-header-7">
+                <h4>{{ this.daysInRange[6][0]}}</h4>
+              </b-col>
+            </b-row>
+            <!-- twitterResults Row -->
+            <b-row class="twitterResults-row">
+              <!-- Day 1 Twitter Results -->
+              <b-col class="twitterResults-col" id="twitterResults-day-1">
+                <div><div class="text-primary" style="float: left"><strong>Avg Sentiment:</strong></div> {{twitterResults['day1'].avg_sentiment}}</div>
+                <div><strong># of Tweets:</strong> {{twitterResults['day1'].num_tweets}}</div><br>
+                <div class="text-success"><strong>Max Sentiment:</strong></div><strong>{{twitterResults['day1'].max_sentiment[0]}}</strong> - "{{twitterResults['day1'].max_sentiment[1]}}"<br><br>
+                <div class="text-danger"><strong>Min Sentiment:</strong></div><strong>{{twitterResults['day1'].min_sentiment[0]}}</strong> - "{{twitterResults['day1'].min_sentiment[1]}}"
+              </b-col>
+              <!-- Day 2 Twitter Results -->
+              <b-col class="twitterResults-col" id="twitterResults-day-2">
+                <div><div class="text-primary" style="float: left"><strong>Avg Sentiment:</strong></div> {{twitterResults['day2'].avg_sentiment}}</div>
+                <div><strong># of Tweets:</strong> {{twitterResults['day2'].num_tweets}}</div><br>
+                <div class="text-success"><strong>Max Sentiment:</strong></div><strong>{{twitterResults['day2'].max_sentiment[0]}}</strong> - "{{twitterResults['day2'].max_sentiment[1]}}"<br><br>
+                <div class="text-danger"><strong>Min Sentiment:</strong></div><strong>{{twitterResults['day2'].min_sentiment[0]}}</strong> - "{{twitterResults['day2'].min_sentiment[1]}}"
+              </b-col>
+              <!-- Day 3 Twitter Results -->
+              <b-col class="twitterResults-col" id="twitterResults-day-3">
+                <div><div class="text-primary" style="float: left"><strong>Avg Sentiment:</strong></div> {{twitterResults['day3'].avg_sentiment}}</div>
+                <div><strong># of Tweets:</strong> {{twitterResults['day3'].num_tweets}}</div><br>
+                <div class="text-success"><strong>Max Sentiment:</strong></div><strong>{{twitterResults['day3'].max_sentiment[0]}}</strong> - "{{twitterResults['day3'].max_sentiment[1]}}"<br><br>
+                <div class="text-danger"><strong>Min Sentiment:</strong></div><strong>{{twitterResults['day3'].min_sentiment[0]}}</strong> - "{{twitterResults['day3'].min_sentiment[1]}}"
+              </b-col>
+              <!-- Day 4 Twitter Results -->
+              <b-col class="twitterResults-col" id="twitterResults-day-4">
+                <div><div class="text-primary" style="float: left"><strong>Avg Sentiment:</strong></div> {{twitterResults['day4'].avg_sentiment}}</div>
+                <div><strong># of Tweets:</strong> {{twitterResults['day4'].num_tweets}}</div><br>
+                <div class="text-success"><strong>Max Sentiment:</strong></div><strong>{{twitterResults['day4'].max_sentiment[0]}}</strong> - "{{twitterResults['day4'].max_sentiment[1]}}"<br><br>
+                <div class="text-danger"><strong>Min Sentiment:</strong></div><strong>{{twitterResults['day4'].min_sentiment[0]}}</strong> - "{{twitterResults['day4'].min_sentiment[1]}}"
+              </b-col>
+              <!-- Day 5 Twitter Results -->
+              <b-col class="twitterResults-col" id="twitterResults-day-5">
+                <div><div class="text-primary" style="float: left"><strong>Avg Sentiment:</strong></div> {{twitterResults['day5'].avg_sentiment}}</div>
+                <div><strong># of Tweets:</strong> {{twitterResults['day5'].num_tweets}}</div><br>
+                <div class="text-success"><strong>Max Sentiment:</strong></div><strong>{{twitterResults['day5'].max_sentiment[0]}}</strong> - "{{twitterResults['day5'].max_sentiment[1]}}"<br><br>
+                <div class="text-danger"><strong>Min Sentiment:</strong></div><strong>{{twitterResults['day5'].min_sentiment[0]}}</strong> - "{{twitterResults['day5'].min_sentiment[1]}}"
+              </b-col>
+              <!-- Day 6 Twitter Results -->
+              <b-col class="twitterResults-col" id="twitterResults-day-6">
+                <div><div class="text-primary" style="float: left"><strong>Avg Sentiment:</strong></div> {{twitterResults['day6'].avg_sentiment}}</div>
+                <div><strong># of Tweets:</strong> {{twitterResults['day6'].num_tweets}}</div><br>
+                <div class="text-success"><strong>Max Sentiment:</strong></div><strong>{{twitterResults['day6'].max_sentiment[0]}}</strong> - "{{twitterResults['day6'].max_sentiment[1]}}"<br><br>
+                <div class="text-danger"><strong>Min Sentiment:</strong></div><strong>{{twitterResults['day6'].min_sentiment[0]}}</strong> - "{{twitterResults['day6'].min_sentiment[1]}}"
+              </b-col>
+              <!-- Day 7 Twitter Results -->
+              <b-col class="twitterResults-col" id="twitterResults-day-7">
+                <div><div class="text-primary" style="float: left"><strong>Avg Sentiment:</strong></div> {{twitterResults['day7'].avg_sentiment}}</div>
+                <div><strong># of Tweets:</strong> {{twitterResults['day7'].num_tweets}}</div><br>
+                <div class="text-success"><strong>Max Sentiment:</strong></div><strong>{{twitterResults['day7'].max_sentiment[0]}}</strong> - "{{twitterResults['day7'].max_sentiment[1]}}"<br><br>
+                <div class="text-danger"><strong>Min Sentiment:</strong></div><strong>{{twitterResults['day7'].min_sentiment[0]}}</strong> - "{{twitterResults['day7'].min_sentiment[1]}}"
+              </b-col>
+            </b-row>
           </b-card>
         </b-collapse>
 
@@ -354,7 +438,6 @@ export default {
         text: 'Expand All'
       }
     }
-    console.log(this.collapses)
 
     // Get the date range from a week ago until yesterday - format: [[start_date], [end_date]] i.e: ["YYYY-MM-DD", "YYYY-MM-DD"]
     var todaysDate = new Date()
@@ -366,16 +449,26 @@ export default {
     const datesRange = [oneWeekAgo.toString(), todaysDate.toString()]
     this.dateRange = datesRange
 
-    // Get the strings for each date - "aDate" and "bDate" because ISO string and normal strings set them as different dates
+    // Get the strings for each date
     var allDays = []
     for (i = 6; i >= 0; i--) {
       var aDate = new Date()
-      var bDate = new Date()
       aDate.setDate(aDate.getDate() - i)
-      bDate.setDate(bDate.getDate() - i - 1)
-      allDays.push([aDate.toString().split(' 202')[0], bDate.toISOString().split('T')[0]])
+      allDays.push([aDate.toString().split(' 202')[0], aDate.toISOString().split('T')[0]])
     }
     this.daysInRange = allDays
+
+    // Initialize the twitter twitterResults object
+    this.twitterResults = {}
+    for (i = 0; i < 7; i++) {
+      var dayNum = 'day' + (i + 1).toString()
+      this.twitterResults[dayNum] = {
+        avg_sentiment: 0,
+        max_sentiment: [0, ''],
+        min_sentiment: [0, ''],
+        num_tweets: 0
+      }
+    }
   },
   data () {
     return {
@@ -407,6 +500,7 @@ export default {
       longitude: null,
       radius: null,
       collapses: {},
+      twitterResults: {},
       circleSelectorLink: 'https://www.mapdevelopers.com/draw-circle-tool.php',
       // Value format: City name, Lat, Long, Radius (miles), link to circle (see processCity())
       cityOptions: [
@@ -496,7 +590,7 @@ export default {
       }
     },
     // Function that attaches to the save button
-    saveKeywords (dayNum, dayStg) {
+    async saveKeywords (dayNum, dayStg) {
       var dayKeywords = this.keywords[dayNum].cold
       dayKeywords = dayKeywords.concat(this.keywords[dayNum].warm)
       dayKeywords = dayKeywords.concat(this.keywords[dayNum].storm)
@@ -509,8 +603,17 @@ export default {
         headers: {
           'Content-Type': 'application/json'
         }
-      }).then(function (response) {
-        console.log(response)
+      }).then((response) => {
+        this.twitterResults[dayNum].avg_sentiment = response['data'][dayStg]['average_sentiment'].toFixed(2)
+        this.twitterResults[dayNum].max_sentiment = response['data'][dayStg]['max_sentiment']
+        this.twitterResults[dayNum].min_sentiment = response['data'][dayStg]['min_sentiment']
+        this.twitterResults[dayNum].num_tweets = response['data'][dayStg]['number_of_tweets']
+        // Add decimal places
+        this.twitterResults[dayNum].max_sentiment[0] = this.twitterResults[dayNum].max_sentiment[0].toFixed(3)
+        this.twitterResults[dayNum].min_sentiment[0] = this.twitterResults[dayNum].min_sentiment[0].toFixed(3)
+        console.log(this.twitterResults[dayNum])
+        // Re-renders the page with new updates
+        this.$forceUpdate()
       }).catch(function (error) {
         console.log(error)
       })
@@ -574,10 +677,10 @@ export default {
       this.makeToast('Applied keywords to all the days')
     },
     // Saves all the keywords in the range
-    saveAll () {
+    async saveAll () {
       for (var i = 0; i < this.daysInRange.length; i++) {
         var dayNum = 'day' + (i + 1).toString()
-        this.saveKeywords(dayNum, this.daysInRange[i][1])
+        await this.saveKeywords(dayNum, this.daysInRange[i][1])
       }
     },
     // Clears all the keywords
@@ -589,6 +692,15 @@ export default {
           warm: [],
           storm: [],
           precip: []
+        }
+      }
+      for (i = 0; i < 7; i++) {
+        dayNum = 'day' + (i + 1).toString()
+        this.twitterResults[dayNum] = {
+          avg_sentiment: 0,
+          max_sentiment: [0, ''],
+          min_sentiment: [0, ''],
+          num_tweets: 0
         }
       }
       // Re-renders the page with new updates
