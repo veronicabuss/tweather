@@ -104,25 +104,25 @@
           <!-- Date Header Row -->
           <b-row class="header-row">
             <b-col class="header" id="date-header-1">
-              <h3>11/22</h3>
+              <h3>{{ this.daysInRange[0][0]}}</h3>
             </b-col>
             <b-col class="header" id="date-header-2">
-              <h3>11/23</h3>
+              <h3>{{ this.daysInRange[1][0]}}</h3>
             </b-col>
             <b-col class="header" id="date-header-3">
-              <h3>11/24</h3>
+              <h3>{{ this.daysInRange[2][0]}}</h3>
             </b-col>
             <b-col class="header" id="date-header-4">
-              <h3>11/25</h3>
+              <h3>{{ this.daysInRange[3][0]}}</h3>
             </b-col>
             <b-col class="header" id="date-header-5">
-              <h3>11/26</h3>
+              <h3>{{ this.daysInRange[4][0]}}</h3>
             </b-col>
             <b-col class="header" id="date-header-6">
-              <h3>11/27</h3>
+              <h3>{{ this.daysInRange[5][0]}}</h3>
             </b-col>
             <b-col class="header" id="date-header-7">
-              <h3>11/28</h3>
+              <h3>{{ this.daysInRange[6][0]}}</h3>
             </b-col>
           </b-row>
           <!-- Keywords Row -->
@@ -153,7 +153,7 @@
               <b-collapse id="day1-precip-collapse">
                 <b-form-checkbox-group v-model="keywords.day1.precip" id="day1-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
               </b-collapse>
-              <b-button variant="info" @click="saveKeywords('day1')" style="margin: 10px 0; width: 80%">Save</b-button>
+              <b-button variant="info" @click="saveKeywords('day1', daysInRange[0][1])" style="margin: 10px 0; width: 80%">Save</b-button>
             </b-col>
             <!-- Day 2 Keywords -->
             <b-col class="keywords-col" id="keywords-day-2">
@@ -177,7 +177,7 @@
               <b-collapse id="day2-precip-collapse">
                 <b-form-checkbox-group v-model="keywords.day2.precip" id="day2-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
               </b-collapse>
-              <b-button variant="info" @click="saveKeywords('day2')" style="margin: 10px 0; width: 80%">Save</b-button>
+              <b-button variant="info" @click="saveKeywords('day2', daysInRange[1][1])" style="margin: 10px 0; width: 80%">Save</b-button>
             </b-col>
             <!-- Day 3 Keywords -->
             <b-col class="keywords-col" id="keywords-day-3">
@@ -201,7 +201,7 @@
               <b-collapse id="day3-precip-collapse">
                 <b-form-checkbox-group v-model="keywords.day3.precip" id="day3-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
               </b-collapse>
-              <b-button variant="info" @click="saveKeywords('day3')" style="margin: 10px 0; width: 80%">Save</b-button>
+              <b-button variant="info" @click="saveKeywords('day3', daysInRange[2][1])" style="margin: 10px 0; width: 80%">Save</b-button>
             </b-col>
             <!-- Day 4 Keywords -->
             <b-col class="keywords-col" id="keywords-day-4">
@@ -225,7 +225,7 @@
               <b-collapse id="day4-precip-collapse">
                 <b-form-checkbox-group v-model="keywords.day4.precip" id="day4-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
               </b-collapse>
-              <b-button variant="info" @click="saveKeywords('day4')" style="margin: 10px 0; width: 80%">Save</b-button>
+              <b-button variant="info" @click="saveKeywords('day4', daysInRange[3][1])" style="margin: 10px 0; width: 80%">Save</b-button>
             </b-col>
             <!-- Day 5 Keywords -->
             <b-col class="keywords-col" id="keywords-day-5">
@@ -249,7 +249,7 @@
               <b-collapse id="day5-precip-collapse">
                 <b-form-checkbox-group v-model="keywords.day5.precip" id="day5-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
               </b-collapse>
-              <b-button variant="info" @click="saveKeywords('day5')" style="margin: 10px 0; width: 80%">Save</b-button>
+              <b-button variant="info" @click="saveKeywords('day5', daysInRange[4][1])" style="margin: 10px 0; width: 80%">Save</b-button>
             </b-col>
             <!-- Day 6 Keywords -->
             <b-col class="keywords-col" id="keywords-day-6">
@@ -273,7 +273,7 @@
               <b-collapse id="day6-precip-collapse">
                 <b-form-checkbox-group v-model="keywords.day6.precip" id="day6-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
               </b-collapse>
-              <b-button variant="info" @click="saveKeywords('day6')" style="margin: 10px 0; width: 80%">Save</b-button>
+              <b-button variant="info" @click="saveKeywords('day6', daysInRange[5][1])" style="margin: 10px 0; width: 80%">Save</b-button>
             </b-col>
             <!-- Day 7 Keywords -->
             <b-col class="keywords-col" id="keywords-day-7">
@@ -297,7 +297,7 @@
               <b-collapse id="day7-precip-collapse">
                 <b-form-checkbox-group v-model="keywords.day7.precip" id="day7-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
               </b-collapse>
-              <b-button variant="info" @click="saveKeywords('day7')" style="margin: 10px 0; width: 80%">Save</b-button>
+              <b-button variant="info" @click="saveKeywords('day7', daysInRange[6][1])" style="margin: 10px 0; width: 80%">Save</b-button>
             </b-col>
           </b-row>
         </b-card>
@@ -322,6 +322,24 @@ export default {
         precip: []
       }
     }
+
+    // Get the date range from a week ago until yesterday - format: [[start_date], [end_date]] i.e: ["YYYY-MM-DD", "YYYY-MM-DD"]
+    var todaysDate = new Date()
+    todaysDate = todaysDate.toISOString().split('T')[0]
+    var oneWeekAgo = new Date()
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 6)
+    oneWeekAgo = oneWeekAgo.toISOString().split('T')[0]
+    const datesRange = [oneWeekAgo.toString(), todaysDate.toString()]
+    this.dateRange = datesRange
+
+    // Get the strings for each date
+    var allDays = []
+    for (i = 6; i >= 0; i--) {
+      var aDate = new Date()
+      aDate.setDate(aDate.getDate() - i)
+      allDays.push([aDate.toString().split(' 202')[0], aDate.toISOString().split('T')[0]])
+    }
+    this.daysInRange = allDays
   },
   data () {
     return {
@@ -343,6 +361,7 @@ export default {
       // Other Variables
       total_precip: null,
       dateRange: null,
+      daysInRange: [],
       cityName: null,
       tempData: null,
       cityData: null,
@@ -384,15 +403,6 @@ export default {
   },
   methods: {
     useDate () {
-      // Get the date range from a week ago until yesterday - format: [[start_date], [end_date]] i.e: ["YYYY-MM-DD", "YYYY-MM-DD"]
-      var todaysDate = new Date()
-      todaysDate = todaysDate.toISOString().split('T')[0]
-      var oneWeekAgo = new Date()
-      oneWeekAgo.setDate(oneWeekAgo.getDate() - 6)
-      oneWeekAgo = oneWeekAgo.toISOString().split('T')[0]
-      const datesRange = [oneWeekAgo.toString(), todaysDate.toString()]
-      this.dateRange = datesRange
-
       // Push the date range to the backend
       const path = 'http://localhost:5000/api/request'
       const json = JSON.stringify({latitude: this.latitude, longitude: this.longitude, date: this.dateRange})
@@ -436,7 +446,7 @@ export default {
       }
     },
     // Function that attaches to the save button
-    saveKeywords (dayNum) {
+    saveKeywords (dayNum, dayStg) {
       var dayKeywords = this.keywords[dayNum].cold
       dayKeywords = dayKeywords.concat(this.keywords[dayNum].warm)
       dayKeywords = dayKeywords.concat(this.keywords[dayNum].storm)
@@ -444,11 +454,7 @@ export default {
       console.log(dayKeywords)
 
       const path = 'http://localhost:5000/api/twitter_request'
-      var oneWeekAgo = new Date()
-      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7)
-      oneWeekAgo = oneWeekAgo.toISOString().split('T')[0]
-
-      const json = JSON.stringify({keywords: dayKeywords, latitude: this.latitude, longitude: this.longitude, radius: this.radius, date: oneWeekAgo})
+      const json = JSON.stringify({keywords: dayKeywords, latitude: this.latitude, longitude: this.longitude, radius: this.radius, date: dayStg})
       axios.post(path, json, {
         headers: {
           'Content-Type': 'application/json'
