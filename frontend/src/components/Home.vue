@@ -303,18 +303,17 @@
                 </b-collapse>
                 <br>
                 <b-button variant="outline-dark" @click="toggleAndUpdate('day7', 'storm')" class="button-dropdown">Storm <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-                <b-collapse v-model="collapses.day7.precip">
+                <b-collapse v-model="collapses.day7.storm">
                   <b-form-checkbox-group v-model="keywords.day7.storm" id="day7-storm-checkboxes" :options="stormOptions"></b-form-checkbox-group>
                 </b-collapse>
                 <br>
                 <b-button variant="outline-primary" @click="toggleAndUpdate('day7', 'precip')" class="button-dropdown">Precipitation <b-icon icon="chevron-down" scale="0.8"></b-icon></b-button>
-                <b-collapse v-model="collapses.day7.cold">
+                <b-collapse v-model="collapses.day7.precip">
                   <b-form-checkbox-group v-model="keywords.day7.precip" id="day7-precip-checkboxes" :options="precipOptions"></b-form-checkbox-group>
                 </b-collapse>
                 <b-button variant="info" @click="saveKeywords('day7', daysInRange[6][1])" style="margin: 10px 0; width: 80%">Save</b-button>
               </b-col>
             </b-row>
-
             <!-- Save and Clear all buttons -->
             <b-button-group style="width: 100%; margin-top: 10px">
               <b-button variant="outline-success" style="width: 50%" @click="saveAll" >Save All</b-button>
@@ -604,7 +603,7 @@ export default {
           'Content-Type': 'application/json'
         }
       }).then((response) => {
-        if(response) {
+        if (response) {
           this.twitterResults[dayNum].avg_sentiment = response['data'][dayStg]['average_sentiment'].toFixed(2)
           this.twitterResults[dayNum].max_sentiment = response['data'][dayStg]['max_sentiment']
           this.twitterResults[dayNum].min_sentiment = response['data'][dayStg]['min_sentiment']
@@ -616,7 +615,7 @@ export default {
           // Re-renders the page with new updates
           this.$forceUpdate()
         }
-      }).catch( (error) => {
+      }).catch((error) => {
         var msg = 'Either something went wrong or there are no tweets for ' + dayStg + ' :(. Try fewer or different keywords'
         this.makeToast(msg, 'danger', 'Failed to Pull Relevant Tweets')
         console.log(error)
@@ -726,6 +725,11 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+* {
+  font-family: 'Montserrat', sans-serif;
+}
+
 .expand-collapse-button{
   text-align: center;
   margin: 10px;
@@ -741,7 +745,7 @@ export default {
   margin: 1px 1px 0px 1px;
   padding-top: 5px;
 }
-.keywords-col{
+.keywords-col, .twitterResults-col{
   border: 3px solid skyblue;
   margin: 0px 1px 1px 1px;
 }
