@@ -33,6 +33,7 @@ Virtual Environment (Windows):
 - `python3 -m venv venv`
 - `cd venv/Scripts`
 - `& .\activate`
+- `cd ../..`
 - `pip install -r requirements.txt`
 - Now the backend service can be started
   - `$env:FLASK_APP = "./backend/run.py"`
