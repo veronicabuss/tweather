@@ -555,7 +555,7 @@ export default {
         this.avg_temp = response['data']['week']['avgtemp_f'].toFixed(1)
         this.max_temp = response['data']['week']['maxtemp_f']
         this.min_temp = response['data']['week']['mintemp_f']
-        this.total_precip = response['data']['week']['avg_precip'].toFixed(1)
+        this.total_precip = response['data']['week']['total_precip'].toFixed(1)
         // this.total_precip = response['data']['week']['total_precip'].toFixed(2)
         this.total_snow = response['data']['week']['snow_in'].toFixed(2)
         this.total_rain = (this.total_precip - this.total_snow).toFixed(2)
