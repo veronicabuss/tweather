@@ -509,7 +509,10 @@ export default {
         { text: 'Chicago', value: 'Chicago,41.876584,-87.639529,10.0,https://rb.gy/qwsmxo' },
         { text: 'Miami', value: 'Miami,25.783447,-80.214909,5.0,https://rb.gy/j3u5bo' },
         { text: 'New York City', value: 'New York City,40.633541,-73.915357,15.76,https://rb.gy/n5g7tf' },
-        { text: 'Seattle', value: 'Seattle,47.606609,-122.332815,8.0,https://rb.gy/ypkbxo' }
+        { text: 'Seattle', value: 'Seattle,47.606609,-122.332815,8.0,https://rb.gy/ypkbxo' },
+        { text: 'Boston', value: 'Boston,42.328792,-71.058966,4.0,https://rb.gy/xz50pe' },
+        { text: 'Washington D.C', value: 'Washington D.C.,38.916418,-77.015264,5.51,https://rb.gy/ccr2ko' },
+        { text: 'Atlanta', value: 'Atlanta,33.773212,-84.374179,10.0,https://rb.gy/soefgw' }
       ],
       coldOptions: [
         'Cold', 'Icy', 'Snowy', 'Frigid', 'Frost', 'Slippery', 'Blizzard', 'Freezing'
